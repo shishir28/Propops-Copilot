@@ -1,0 +1,42 @@
+PropOps Copilot - Business Problem Statement
+============================================
+
+This project solves the operations bottleneck in property maintenance intake.
+
+The core business problem is:
+How can property management teams handle large volumes of messy, unstructured maintenance requests quickly, consistently, and safely without overloading property managers and dispatch staff?
+
+Current pain points
+-------------------
+
+1. Too much manual triage
+Requests come from portals, email, SMS/chat, and phone notes. Staff must read, interpret, categorize, prioritize, and route each request manually.
+
+2. Slow response and dispatch
+Delays in identifying emergencies or assigning the right vendor reduce tenant satisfaction, increase operational risk, and can raise repair costs.
+
+3. Inconsistent decision-making
+Different staff may classify the same issue differently, leading to uneven service, missed escalations, and policy non-compliance.
+
+4. Knowledge trapped in people and scattered documents
+SOPs, after-hours rules, vendor preferences, and property-specific exceptions are difficult to apply consistently at scale.
+
+5. High-cost administrative work
+Skilled staff spend too much time on repetitive coordination instead of focusing on exceptions, escalations, vendor management, and tenant experience.
+
+Business value
+--------------
+
+- Faster first response
+- More consistent triage
+- Better emergency handling
+- Lower administrative workload
+- Improved tenant experience
+- Better operational scalability
+
+Value proposition
+-----------------
+
+PropOps Copilot helps property management teams turn unstructured maintenance requests into fast, consistent, policy-aware actions.
+
+In simple terms, it reduces the time, cost, and inconsistency of maintenance request triage while improving tenant responsiveness and operational control.

@@ -1,0 +1,86 @@
+PropOps Copilot - Overall Solution Flow
+=======================================
+
++--------------------+
+| Tenant / Agent     |
+| submits request    |
++---------+----------+
+          |
+          v
++--------------------+
+| Intake Channels    |
+| - portal           |
+| - email            |
+| - SMS/chat         |
+| - phone notes      |
++---------+----------+
+          |
+          v
++-----------------------------+
+| Preprocessing Layer         |
+| - normalize text            |
+| - add metadata              |
+| - detect after-hours        |
+| - attach unit/property info |
++---------+-------------------+
+          |
+          v
++-----------------------------+
+| Retrieval / Business Rules  |
+| - maintenance SOPs          |
+| - vendor rules              |
+| - emergency policy          |
+| - property-specific notes   |
++---------+-------------------+
+          |
+          v
++----------------------------------------------+
+| Fine-Tuned Model (vLLM-served)               |
+| Property Mgmt Maintenance Triage Copilot     |
+|                                              |
+| Outputs:                                     |
+| - category                                   |
+| - priority                                   |
+| - vendor type                                |
+| - dispatch decision                          |
+| - internal summary                           |
+| - tenant response draft                      |
++---------+------------------------------------+
+          |
+          v
++-----------------------------+
+| Validation / Guardrails     |
+| - JSON/schema check         |
+| - policy check              |
+| - emergency keyword check   |
+| - confidence / fallback     |
++---------+-------------------+
+          |
+     +----+----+
+     |         |
+     v         v
++---------+  +------------------+
+| Auto    |  | Human Review     |
+| route   |  | property manager |
+| / draft |  | or dispatcher    |
++----+----+  +--------+---------+
+     |                |
+     +--------+-------+
+              |
+              v
++-----------------------------+
+| Action Layer                |
+| - create work order         |
+| - assign vendor             |
+| - notify tenant             |
+| - log internal note         |
++---------+-------------------+
+          |
+          v
++-----------------------------+
+| Feedback / Training Loop    |
+| - final resolution          |
+| - corrected priority        |
+| - edited response draft     |
+| - dispatch outcome          |
++-----------------------------+

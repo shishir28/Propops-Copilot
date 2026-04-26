@@ -1,0 +1,170 @@
+.intake-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(320px, 0.95fr);
+  gap: 24px;
+}
+
+.intake-panel,
+.guidance-card {
+  border: 1px solid var(--border-soft);
+  border-radius: 28px;
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-panel);
+}
+
+.intake-panel {
+  padding: 30px;
+}
+
+.intake-panel__header h2,
+.guidance-card h3 {
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.intake-panel__header p:not(.eyebrow),
+.guidance-card p:not(.eyebrow) {
+  margin: 12px 0 0;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.intake-form {
+  margin-top: 24px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.form-grid__full {
+  display: block;
+  margin-top: 18px;
+}
+
+label {
+  display: block;
+}
+
+label span {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--border-input);
+  border-radius: 18px;
+  background: var(--bg-surface-muted);
+  color: var(--text-primary);
+  outline: none;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--accent-start);
+  box-shadow: var(--focus-ring);
+}
+
+textarea {
+  resize: vertical;
+}
+
+.submit-button {
+  margin-top: 20px;
+  padding: 14px 22px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-accent);
+}
+
+.submit-button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.guidance-panel {
+  display: grid;
+  gap: 18px;
+}
+
+.guidance-card {
+  padding: 24px;
+}
+
+.guidance-card ul {
+  margin: 16px 0 0;
+  padding-left: 20px;
+  color: var(--text-secondary);
+}
+
+.guidance-card li + li {
+  margin-top: 10px;
+}
+
+.guidance-card--success {
+  background: var(--bg-card-success);
+}
+
+dl {
+  margin: 18px 0 0;
+  display: grid;
+  gap: 12px;
+}
+
+dt {
+  margin-bottom: 4px;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+dd {
+  margin: 0;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.form-message {
+  margin: 16px 0 0;
+}
+
+.form-message--error {
+  color: var(--pill-emergency-fg);
+}
+
+@media (max-width: 960px) {
+  .intake-layout,
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .intake-panel,
+  .guidance-card {
+    padding: 22px;
+  }
+}

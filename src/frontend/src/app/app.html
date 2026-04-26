@@ -1,0 +1,63 @@
+<div class="shell">
+  <header class="shell__header">
+    <div class="brand">
+      <div class="brand__mark">P</div>
+      <div>
+        <p class="brand__eyebrow">Operations workspace</p>
+        <h1>PropOps Copilot</h1>
+      </div>
+    </div>
+
+    <div class="shell__actions">
+      <div class="theme-switcher" aria-label="Theme switcher">
+        <button
+          type="button"
+          [class.is-active]="activeTheme() === 'light'"
+          (click)="setTheme('light')"
+        >
+          Light
+        </button>
+        <button
+          type="button"
+          [class.is-active]="activeTheme() === 'dark'"
+          (click)="setTheme('dark')"
+        >
+          Dark
+        </button>
+      </div>
+
+      @if (isAuthenticated()) {
+        <nav class="shell__nav" aria-label="Primary">
+          <a routerLink="/workspace" routerLinkActive="is-active">Workspace</a>
+          @if (currentUser()?.role === 'PropertyManager' || currentUser()?.role === 'Dispatcher') {
+            <a routerLink="/overview" routerLinkActive="is-active">Overview</a>
+          }
+          @if (
+            currentUser()?.role === 'PropertyManager' ||
+            currentUser()?.role === 'Dispatcher' ||
+            currentUser()?.role === 'Tenant' ||
+            currentUser()?.role === 'PropertyOwner'
+          ) {
+            <a routerLink="/intake" routerLinkActive="is-active">New request</a>
+          }
+        </nav>
+
+        @if (currentUser(); as user) {
+          <div class="shell__user">
+            <div>
+              <strong>{{ user.fullName }}</strong>
+              <span>{{ user.role }}</span>
+            </div>
+            <button type="button" (click)="logout()">Sign out</button>
+          </div>
+        }
+      } @else {
+        <a class="shell__login-link" routerLink="/login">Portal sign in</a>
+      }
+    </div>
+  </header>
+
+  <main class="shell__content">
+    <router-outlet />
+  </main>
+</div>

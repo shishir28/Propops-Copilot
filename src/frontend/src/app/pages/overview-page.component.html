@@ -1,0 +1,88 @@
+<section class="hero">
+  <div>
+    <p class="eyebrow">Maintenance operations</p>
+    <h2>Stay ahead of intake, urgency, and dispatch readiness.</h2>
+    <p class="hero__copy">
+      This first release focuses on the operational foundation: intake, queue visibility, and a
+      backend API that future AI workflows can plug into cleanly.
+    </p>
+  </div>
+
+  <a class="hero__action" routerLink="/intake">Create a request</a>
+</section>
+
+@if (loading()) {
+  <section class="state-card">Loading the current maintenance queue...</section>
+} @else if (error()) {
+  <section class="state-card state-card--error">{{ error() }}</section>
+} @else if (overview(); as currentOverview) {
+  <section class="metrics-grid">
+    <article class="metric-card">
+      <p>Open requests</p>
+      <strong>{{ currentOverview.openRequests }}</strong>
+      <span>Active items across all properties</span>
+    </article>
+    <article class="metric-card">
+      <p>Urgent items</p>
+      <strong>{{ currentOverview.urgentRequests }}</strong>
+      <span>High and emergency priority work</span>
+    </article>
+    <article class="metric-card">
+      <p>Submitted today</p>
+      <strong>{{ currentOverview.todaySubmissions }}</strong>
+      <span>Fresh demand entering operations</span>
+    </article>
+    <article class="metric-card">
+      <p>Avg. response target</p>
+      <strong>{{ currentOverview.averageResponseHours }}h</strong>
+      <span>Calculated from configured priority windows</span>
+    </article>
+  </section>
+
+  <section class="queue-panel">
+    <div class="queue-panel__header">
+      <div>
+        <p class="eyebrow">Recent queue</p>
+        <h3>Latest maintenance requests</h3>
+      </div>
+      <span>{{ currentOverview.recentRequests.length }} visible</span>
+    </div>
+
+    <div class="queue-list">
+      @for (request of currentOverview.recentRequests; track trackByReference($index, request)) {
+        <article class="queue-card">
+          <div class="queue-card__top">
+            <div>
+              <p class="queue-card__reference">{{ request.referenceNumber }}</p>
+              <h4>{{ request.propertyName }} · Unit {{ request.unitNumber || 'TBC' }}</h4>
+            </div>
+            <span class="pill" [class]="'pill pill--' + request.priority.toLowerCase()">
+              {{ request.priority }}
+            </span>
+          </div>
+
+          <p class="queue-card__summary">{{ request.internalSummary }}</p>
+
+          <dl class="queue-card__meta">
+            <div>
+              <dt>Status</dt>
+              <dd>{{ request.status }}</dd>
+            </div>
+            <div>
+              <dt>Channel</dt>
+              <dd>{{ request.channel }}</dd>
+            </div>
+            <div>
+              <dt>Assigned team</dt>
+              <dd>{{ request.assignedTeam }}</dd>
+            </div>
+            <div>
+              <dt>Submitted</dt>
+              <dd>{{ request.submittedAtUtc | date: 'medium' }}</dd>
+            </div>
+          </dl>
+        </article>
+      }
+    </div>
+  </section>
+}

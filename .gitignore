@@ -1,0 +1,6 @@
+.DS_Store
+.angular/
+src/frontend/node_modules/
+src/frontend/dist/
+src/backend/**/bin/
+src/backend/**/obj/

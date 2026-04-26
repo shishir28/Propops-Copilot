@@ -1,0 +1,60 @@
+@if (user(); as currentUser) {
+  <section class="workspace-hero">
+    <div>
+      <p class="eyebrow">Authenticated workspace</p>
+      <h2>Welcome, {{ currentUser.fullName }}.</h2>
+      <p class="workspace-copy">
+        You are signed in as <strong>{{ currentUser.role }}</strong>. This workspace adjusts access
+        and next steps based on your user type.
+      </p>
+    </div>
+  </section>
+
+  <section class="workspace-grid">
+    @if (isStaff()) {
+      <article class="workspace-card">
+        <p class="eyebrow">Operations access</p>
+        <h3>Internal maintenance operations</h3>
+        <p>Review queue health, triage requests, and coordinate dispatch activity.</p>
+        <div class="workspace-actions">
+          <a routerLink="/overview">Open overview</a>
+          <a routerLink="/intake">Create request</a>
+        </div>
+      </article>
+    } @else {
+      <article class="workspace-card">
+        <p class="eyebrow">Portal access</p>
+        <h3>{{ currentUser.role }} experience</h3>
+        <p>
+          Your portal access is active. Staff-only queue visibility remains restricted, but your
+          authenticated role is ready for future workflows and integrations.
+        </p>
+        @if (canCreateRequest()) {
+          <div class="workspace-actions">
+            <a routerLink="/intake">Create maintenance request</a>
+          </div>
+        }
+      </article>
+    }
+
+    <article class="workspace-card">
+      <p class="eyebrow">What this means</p>
+      <h3>Role-aware access boundaries</h3>
+      <ul>
+        @if (isStaff()) {
+          <li>Dashboard and queue views are available.</li>
+          <li>Maintenance request submission is available.</li>
+          <li>Protected API access includes operational endpoints.</li>
+        } @else if (canCreateRequest()) {
+          <li>Maintenance request submission is available.</li>
+          <li>Operational queue and dashboard APIs remain restricted.</li>
+          <li>Your role is stored and enforced in ASP.NET Identity.</li>
+        } @else {
+          <li>Authenticated vendor access is active.</li>
+          <li>Staff dashboards and request submission remain restricted.</li>
+          <li>Vendor workflows can be layered in next without reworking auth.</li>
+        }
+      </ul>
+    </article>
+  </section>
+}

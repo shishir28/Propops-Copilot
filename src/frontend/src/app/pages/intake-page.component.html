@@ -1,0 +1,124 @@
+<section class="intake-layout">
+  <article class="intake-panel">
+    <div class="intake-panel__header">
+      <p class="eyebrow">Request intake</p>
+      <h2>Create a maintenance request</h2>
+      <p>
+        Capture resident issues in a structured format so operations can route work faster and more
+        consistently.
+      </p>
+    </div>
+
+    <form class="intake-form" [formGroup]="form" (ngSubmit)="submit()">
+      <div class="form-grid">
+        <label>
+          <span>Resident name</span>
+          <input formControlName="submitterName" placeholder="Ava Thompson" />
+        </label>
+
+        <label>
+          <span>Email address</span>
+          <input formControlName="emailAddress" placeholder="ava@example.com" />
+        </label>
+
+        <label>
+          <span>Phone number</span>
+          <input formControlName="phoneNumber" placeholder="0412 345 678" />
+        </label>
+
+        <label>
+          <span>Property</span>
+          <input formControlName="propertyName" placeholder="Harbour View Residences" />
+        </label>
+
+        <label>
+          <span>Unit</span>
+          <input formControlName="unitNumber" placeholder="12B" />
+        </label>
+
+        <label>
+          <span>Channel</span>
+          <select formControlName="channel">
+            @for (channel of channels; track channel) {
+              <option [value]="channel">{{ channel }}</option>
+            }
+          </select>
+        </label>
+
+        <label>
+          <span>Category</span>
+          <select formControlName="category">
+            @for (category of categories; track category) {
+              <option [value]="category">{{ category }}</option>
+            }
+          </select>
+        </label>
+
+        <label>
+          <span>Priority</span>
+          <select formControlName="priority">
+            @for (priority of priorities; track priority) {
+              <option [value]="priority">{{ priority }}</option>
+            }
+          </select>
+        </label>
+      </div>
+
+      <label class="form-grid__full">
+        <span>Description</span>
+        <textarea
+          formControlName="description"
+          rows="6"
+          placeholder="Describe the issue, impact, and any urgency or safety concerns."
+        ></textarea>
+      </label>
+
+      @if (error()) {
+        <p class="form-message form-message--error">{{ error() }}</p>
+      }
+
+      <button class="submit-button" type="submit" [disabled]="saving()">
+        {{ saving() ? 'Saving request...' : 'Create maintenance request' }}
+      </button>
+    </form>
+  </article>
+
+  <aside class="guidance-panel">
+    <article class="guidance-card">
+      <p class="eyebrow">DDD foundation</p>
+      <h3>Bounded for maintenance intake</h3>
+      <p>
+        The backend models the maintenance request as the core aggregate so routing, AI, and vendor
+        workflows can be added later without reshaping the app foundation.
+      </p>
+    </article>
+
+    <article class="guidance-card">
+      <p class="eyebrow">What this creates</p>
+      <h3>Structured intake with immediate tracking</h3>
+      <ul>
+        <li>Generates a request reference instantly</li>
+        <li>Applies category and priority metadata consistently</li>
+        <li>Stores queue-ready data in PostgreSQL</li>
+      </ul>
+    </article>
+
+    @if (createdRequest(); as request) {
+      <article class="guidance-card guidance-card--success">
+        <p class="eyebrow">Latest request</p>
+        <h3>{{ request.referenceNumber }}</h3>
+        <p>{{ request.internalSummary }}</p>
+        <dl>
+          <div>
+            <dt>Assigned team</dt>
+            <dd>{{ request.assignedTeam }}</dd>
+          </div>
+          <div>
+            <dt>Response target</dt>
+            <dd>{{ request.targetResponseByUtc | date: 'medium' }}</dd>
+          </div>
+        </dl>
+      </article>
+    }
+  </aside>
+</section>

@@ -1,0 +1,43 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: propops-postgres
+    environment:
+      POSTGRES_DB: propops
+      POSTGRES_USER: propops
+      POSTGRES_PASSWORD: propops
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U propops -d propops"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: src/backend/PropOpsCopilot.Api/Dockerfile
+    container_name: propops-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__PropOpsDb: Host=postgres;Port=5432;Database=propops;Username=propops;Password=propops
+    ports:
+      - "8095:8080"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: src/frontend/Dockerfile
+    container_name: propops-frontend
+    depends_on:
+      - api
+    ports:
+      - "4315:4200"
+
+volumes:
+  postgres-data:
