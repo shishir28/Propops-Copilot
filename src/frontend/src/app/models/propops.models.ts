@@ -16,6 +16,7 @@ export type MaintenanceRequestStatus =
   | 'Completed';
 
 export type IntakeChannel = 'Portal' | 'Email' | 'SmsChat' | 'PhoneNote';
+export type ConnectorChannel = Exclude<IntakeChannel, 'Portal'>;
 
 export interface MaintenanceRequest {
   id: string;
@@ -44,6 +45,37 @@ export interface DashboardOverview {
   recentRequests: MaintenanceRequest[];
 }
 
+export interface StandardizedIntakePayload {
+  channel: ConnectorChannel;
+  sourceReference: string;
+  receivedAtUtc: string;
+  submitterName: string;
+  tenantName: string;
+  emailAddress: string;
+  phoneNumber: string;
+  propertyName: string;
+  unitNumber: string;
+  subject: string;
+  rawContent: string;
+  normalizedContent: string;
+  category: MaintenanceRequestCategory;
+  priority: MaintenanceRequestPriority;
+  isAfterHours: boolean;
+  metadataMatched: boolean;
+}
+
+export interface IntakeSubmission {
+  id: string;
+  standardizedPayload: StandardizedIntakePayload;
+  maintenanceRequestId: string;
+  maintenanceRequestReferenceNumber: string;
+}
+
+export interface IntakeIngestionResult {
+  submission: IntakeSubmission;
+  maintenanceRequest: MaintenanceRequest;
+}
+
 export interface CreateMaintenanceRequestPayload {
   submitterName: string;
   emailAddress: string;
@@ -54,6 +86,40 @@ export interface CreateMaintenanceRequestPayload {
   category: MaintenanceRequestCategory;
   priority: MaintenanceRequestPriority;
   channel: IntakeChannel;
+}
+
+export interface IngestEmailPayload {
+  submitterName: string;
+  emailAddress: string;
+  subject: string;
+  messageBody: string;
+  phoneNumber: string;
+  propertyHint: string;
+  unitHint: string;
+  sourceReference: string;
+  receivedAtUtc: string | null;
+}
+
+export interface IngestSmsChatPayload {
+  submitterName: string;
+  phoneNumber: string;
+  messageBody: string;
+  emailAddress: string;
+  propertyHint: string;
+  unitHint: string;
+  sourceReference: string;
+  receivedAtUtc: string | null;
+}
+
+export interface IngestPhoneNotePayload {
+  submitterName: string;
+  phoneNumber: string;
+  emailAddress: string;
+  note: string;
+  propertyHint: string;
+  unitHint: string;
+  sourceReference: string;
+  receivedAtUtc: string | null;
 }
 
 export interface LoginPayload {

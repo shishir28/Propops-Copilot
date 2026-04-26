@@ -14,21 +14,33 @@
         <label>
           <span>Resident name</span>
           <input formControlName="submitterName" placeholder="Ava Thompson" />
+          @if (showFieldError('submitterName')) {
+            <small class="field-error">{{ fieldErrorMessage('submitterName') }}</small>
+          }
         </label>
 
         <label>
           <span>Email address</span>
           <input formControlName="emailAddress" placeholder="ava@example.com" />
+          @if (showFieldError('emailAddress')) {
+            <small class="field-error">{{ fieldErrorMessage('emailAddress') }}</small>
+          }
         </label>
 
         <label>
           <span>Phone number</span>
           <input formControlName="phoneNumber" placeholder="0412 345 678" />
+          @if (showFieldError('phoneNumber')) {
+            <small class="field-error">{{ fieldErrorMessage('phoneNumber') }}</small>
+          }
         </label>
 
         <label>
           <span>Property</span>
           <input formControlName="propertyName" placeholder="Harbour View Residences" />
+          @if (showFieldError('propertyName')) {
+            <small class="field-error">{{ fieldErrorMessage('propertyName') }}</small>
+          }
         </label>
 
         <label>
@@ -71,10 +83,19 @@
           rows="6"
           placeholder="Describe the issue, impact, and any urgency or safety concerns."
         ></textarea>
+        @if (showFieldError('description')) {
+          <small class="field-error">{{ fieldErrorMessage('description') }}</small>
+        }
       </label>
 
       @if (error()) {
         <p class="form-message form-message--error">{{ error() }}</p>
+      }
+
+      @if (createdRequest(); as request) {
+        <p class="form-message form-message--success">
+          Request <strong>{{ request.referenceNumber }}</strong> was created successfully.
+        </p>
       }
 
       <button class="submit-button" type="submit" [disabled]="saving()">

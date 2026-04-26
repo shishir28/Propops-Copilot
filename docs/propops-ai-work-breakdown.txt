@@ -1,0 +1,144 @@
+PropOps Copilot - AI Work Breakdown
+===================================
+
+Runtime boundary
+----------------
+
+- Angular frontend talks only to the .NET API
+- .NET API owns authentication, validation, persistence, and frontend-facing contracts
+- All AI-specific work must run in the separate Python AI service
+- The .NET API should call the Python service whenever AI behavior is needed
+
+Level 1 - Intake and normalization
+----------------------------------
+
+1. Add non-portal intake connectors
+   - email ingestion
+   - SMS/chat ingestion
+   - phone-note/manual entry ingestion
+   - unify all channels into one request format
+
+2. Build preprocessing pipeline
+   - normalize messy text
+   - attach property/unit/tenant metadata
+   - detect after-hours context
+   - standardize payloads before AI
+
+Level 1 note:
+- deterministic intake normalization can remain in the .NET application layer
+- anything model-driven or AI-assisted should move to the Python service boundary
+
+Level 2 - Rules and knowledge
+-----------------------------
+
+3. Implement retrieval/business-rules layer
+   - maintenance SOPs
+   - vendor rules
+   - emergency policy
+   - property-specific notes
+   - keep this outside the model
+
+4. Define AI input/output contracts
+   - input schema for triage requests
+   - output schema for:
+     - category
+     - priority
+     - vendor type
+     - dispatch decision
+     - internal summary
+     - tenant response draft
+
+Level 3 - First AI path
+-----------------------
+
+5. Add baseline inference
+   - use a strong instruct model first
+   - integrate behind an application service
+   - validate the end-to-end path before fine-tuning
+
+6. Add validation and guardrails
+   - JSON/schema validation
+   - policy checks
+   - emergency keyword checks
+   - confidence/fallback rules
+
+Level 4 - Human-in-the-loop operations
+--------------------------------------
+
+7. Expand human review workflow
+   - allow staff to approve/edit AI outputs
+   - override category/priority/dispatch decision
+   - edit tenant response draft
+
+8. Build action integrations
+   - create work order
+   - assign vendor
+   - notify tenant
+   - log internal note
+
+Level 5 - Learning loop
+-----------------------
+
+9. Capture feedback data
+   - final resolution
+   - corrected priority/category
+   - edited response draft
+   - dispatch outcome
+
+10. Prepare fine-tuning dataset
+    - convert reviewed cases into training examples
+    - clean labels
+    - stable structured outputs
+    - remove noisy/low-quality examples
+
+Level 6 - Model specialization
+------------------------------
+
+11. Fine-tune the triage model
+    - tune for property-management triage behavior
+    - tune for structured output consistency
+    - tune for tenant response tone/style
+
+12. Serve model with vLLM
+    - deploy selected/fine-tuned model behind vLLM
+    - expose application-facing API
+    - make app call the model through a stable service layer
+
+Level 7 - Quality and safety
+----------------------------
+
+13. Evaluate continuously
+    - triage accuracy
+    - emergency detection quality
+    - schema compliance
+    - policy adherence
+    - automation vs human-review rate
+
+Recommended implementation order
+--------------------------------
+
+1. Intake connectors
+2. Preprocessing
+3. Retrieval/business rules
+4. Output contracts
+5. Baseline inference
+6. Guardrails
+7. Human review
+8. Action integrations
+9. Feedback capture
+10. Fine-tuning dataset
+11. Fine-tuning
+12. vLLM serving
+13. Evaluation
+
+Important design rule
+---------------------
+
+- RAG/rules should hold changing knowledge
+- Fine-tuning should shape behavior and output style
+- vLLM should handle serving, not training
+
+Immediate next milestone
+------------------------
+
+connectors + preprocessing + rules/retrieval + baseline model integration

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PropOpsCopilot.Application.Abstractions;
+using PropOpsCopilot.Application.Options;
 using PropOpsCopilot.Infrastructure.Identity;
 using PropOpsCopilot.Infrastructure.Persistence;
 using PropOpsCopilot.Infrastructure.Repositories;
@@ -20,12 +21,23 @@ public static class DependencyInjection
 
         services.AddDbContext<PropOpsDbContext>(options => options.UseNpgsql(connectionString));
         var jwtSection = configuration.GetSection(PortalJwtOptions.SectionName);
+        var intakeSection = configuration.GetSection(IntakePreprocessingOptions.SectionName);
         services.Configure<PortalJwtOptions>(options =>
         {
             options.Issuer = jwtSection["Issuer"] ?? string.Empty;
             options.Audience = jwtSection["Audience"] ?? string.Empty;
             options.SigningKey = jwtSection["SigningKey"] ?? string.Empty;
             options.ExpiryHours = int.TryParse(jwtSection["ExpiryHours"], out var expiryHours) ? expiryHours : 8;
+        });
+        services.Configure<IntakePreprocessingOptions>(options =>
+        {
+            options.TimeZoneId = intakeSection["TimeZoneId"] ?? "Australia/Sydney";
+            options.BusinessHoursStartHour = int.TryParse(intakeSection["BusinessHoursStartHour"], out var startHour)
+                ? startHour
+                : 8;
+            options.BusinessHoursEndHour = int.TryParse(intakeSection["BusinessHoursEndHour"], out var endHour)
+                ? endHour
+                : 18;
         });
         services.AddIdentityCore<AppUser>(options =>
             {
@@ -39,6 +51,8 @@ public static class DependencyInjection
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<PropOpsDbContext>();
 
+        services.AddScoped<IContactDirectoryRepository, ContactDirectoryRepository>();
+        services.AddScoped<IIntakeSubmissionRepository, IntakeSubmissionRepository>();
         services.AddScoped<IMaintenanceRequestRepository, MaintenanceRequestRepository>();
         services.AddScoped<IPortalIdentityService, PortalIdentityService>();
         services.AddScoped<PropOpsDataSeeder>();

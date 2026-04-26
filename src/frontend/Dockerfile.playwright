@@ -1,0 +1,11 @@
+FROM mcr.microsoft.com/playwright:v1.59.1-noble
+
+WORKDIR /app
+
+COPY src/frontend/package*.json ./
+RUN npm ci
+
+COPY src/frontend/playwright.config.ts ./playwright.config.ts
+COPY src/frontend/playwright ./playwright
+
+CMD ["npm", "run", "test:e2e"]

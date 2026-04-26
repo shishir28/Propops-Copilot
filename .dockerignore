@@ -3,6 +3,14 @@
 .angular
 src/frontend/node_modules
 src/frontend/dist
+src/frontend/playwright-report
+src/frontend/test-results
 src/backend/**/bin
 src/backend/**/obj
+src/ai/**/.venv
+**/__pycache__
+**/*.py[cod]
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
 **/.DS_Store

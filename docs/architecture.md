@@ -2,7 +2,7 @@
 
 ## Intent
 
-This application establishes the operational foundation for PropOps Copilot before any AI or inference modules are introduced.
+This application establishes the operational foundation for PropOps Copilot before any AI or inference modules are introduced, while reserving a separate Python runtime for future AI features.
 
 ## Domain focus
 
@@ -24,6 +24,24 @@ The .NET solution follows a DDD-oriented structure:
 | `PropOpsCopilot.Application` | Use-case services, DTOs, and repository abstractions |
 | `PropOpsCopilot.Infrastructure` | EF Core persistence, repository implementations, and seed data |
 | `PropOpsCopilot.Api` | REST endpoints, dependency wiring, CORS, and Swagger |
+
+The .NET API remains the single backend surface for the Angular frontend. Any future AI task must be delegated from the API to the separate Python AI service rather than implemented inside the .NET portal runtime.
+
+## AI runtime boundary
+
+The repository now reserves `src/ai/propops-ai-service` for all AI-specific work, including:
+
+- retrieval and business-rule orchestration for AI flows
+- prompt construction and model adapters
+- guardrails and evaluation pipelines
+- fine-tuned model integration and vLLM-facing logic
+
+The Python service is intentionally isolated behind an internal HTTP boundary:
+
+1. Angular calls the .NET API.
+2. The .NET API performs identity, validation, persistence, and workflow orchestration.
+3. When AI is needed, the .NET API calls the Python AI service.
+4. The Python service can then call model hosts such as vLLM without exposing them to the frontend.
 
 ## Frontend structure
 
@@ -48,11 +66,13 @@ The portal now uses **ASP.NET Core Identity** for multi-role authentication.
 
 ## Container topology
 
-`docker-compose.yml` starts three services:
+`docker-compose.yml` starts four primary services plus one optional test service:
 
 1. `postgres` for persistence
-2. `api` for the ASP.NET Core backend
-3. `frontend` for the Angular application served by Nginx
+2. `ai-service` for the dedicated Python AI runtime
+3. `api` for the ASP.NET Core backend
+4. `frontend` for the Angular application served by Nginx
+5. `playwright` as an on-demand browser test runner in the `test` profile
 
 ## Future extension path
 
@@ -63,4 +83,4 @@ The current architecture leaves room for future modules such as:
 - guardrails and confidence scoring
 - dispatch workflows and vendor integration
 
-Those capabilities can be introduced as separate application services or bounded contexts without replacing the initial intake foundation.
+Those capabilities can be introduced without replacing the initial intake foundation because the user-facing API and the AI runtime are already separated.

@@ -63,6 +63,13 @@ label span {
   font-weight: 600;
 }
 
+.field-error {
+  display: block;
+  margin-top: 8px;
+  color: var(--pill-emergency-fg);
+  font-size: 0.84rem;
+}
+
 input,
 select,
 textarea {
@@ -155,6 +162,10 @@ dd {
 
 .form-message--error {
   color: var(--pill-emergency-fg);
+}
+
+.form-message--success {
+  color: var(--pill-success-fg);
 }
 
 @media (max-width: 960px) {

@@ -14,7 +14,9 @@ public sealed class PropOpsDataSeeder(
     public async Task SeedAsync(CancellationToken cancellationToken = default)
     {
         await dbContext.Database.EnsureCreatedAsync(cancellationToken);
+        await EnsureOperationalSchemaAsync(cancellationToken);
         await EnsureIdentitySchemaAsync(cancellationToken);
+        await SeedContactDirectoryAsync(cancellationToken);
         await SeedPortalUsersAsync();
 
         if (await dbContext.MaintenanceRequests.AnyAsync(cancellationToken))
@@ -72,6 +74,59 @@ public sealed class PropOpsDataSeeder(
 
         await dbContext.MaintenanceRequests.AddRangeAsync(seedRequests, cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task EnsureOperationalSchemaAsync(CancellationToken cancellationToken)
+    {
+        const string operationalSchemaSql = """
+            CREATE TABLE IF NOT EXISTS contact_directory_entries (
+                "Id" uuid NOT NULL,
+                "FullName" character varying(120) NOT NULL,
+                "EmailAddress" character varying(256) NOT NULL DEFAULT '',
+                "PhoneNumber" character varying(32) NOT NULL DEFAULT '',
+                "PropertyName" character varying(160) NOT NULL,
+                "UnitNumber" character varying(40) NOT NULL DEFAULT '',
+                "TenantName" character varying(120) NOT NULL,
+                CONSTRAINT "PK_contact_directory_entries" PRIMARY KEY ("Id")
+            );
+
+            CREATE TABLE IF NOT EXISTS intake_submissions (
+                "Id" uuid NOT NULL,
+                "SourceReference" character varying(80) NOT NULL,
+                "Channel" character varying(40) NOT NULL,
+                "ReceivedAtUtc" timestamp with time zone NOT NULL,
+                "SubmitterName" character varying(120) NOT NULL,
+                "TenantName" character varying(120) NOT NULL,
+                "EmailAddress" character varying(256) NOT NULL DEFAULT '',
+                "PhoneNumber" character varying(32) NOT NULL DEFAULT '',
+                "PropertyName" character varying(160) NOT NULL,
+                "UnitNumber" character varying(40) NOT NULL DEFAULT '',
+                "Subject" character varying(240) NOT NULL DEFAULT '',
+                "RawContent" character varying(6000) NOT NULL,
+                "NormalizedContent" character varying(4000) NOT NULL,
+                "Category" character varying(40) NOT NULL,
+                "Priority" character varying(40) NOT NULL,
+                "IsAfterHours" boolean NOT NULL,
+                "MetadataMatched" boolean NOT NULL,
+                "MaintenanceRequestId" uuid NOT NULL,
+                CONSTRAINT "PK_intake_submissions" PRIMARY KEY ("Id"),
+                CONSTRAINT "FK_intake_submissions_maintenance_requests_MaintenanceRequestId"
+                    FOREIGN KEY ("MaintenanceRequestId") REFERENCES maintenance_requests ("Id") ON DELETE CASCADE
+            );
+
+            CREATE INDEX IF NOT EXISTS "IX_contact_directory_entries_EmailAddress"
+                ON contact_directory_entries ("EmailAddress");
+            CREATE INDEX IF NOT EXISTS "IX_contact_directory_entries_PhoneNumber"
+                ON contact_directory_entries ("PhoneNumber");
+            CREATE INDEX IF NOT EXISTS "IX_intake_submissions_MaintenanceRequestId"
+                ON intake_submissions ("MaintenanceRequestId");
+            CREATE INDEX IF NOT EXISTS "IX_intake_submissions_ReceivedAtUtc"
+                ON intake_submissions ("ReceivedAtUtc");
+            CREATE INDEX IF NOT EXISTS "IX_intake_submissions_SourceReference"
+                ON intake_submissions ("SourceReference");
+            """;
+
+        await dbContext.Database.ExecuteSqlRawAsync(operationalSchemaSql, cancellationToken);
     }
 
     private async Task EnsureIdentitySchemaAsync(CancellationToken cancellationToken)
@@ -225,6 +280,56 @@ public sealed class PropOpsDataSeeder(
             var roleResult = await userManager.AddToRoleAsync(user, role);
             EnsureSucceeded(roleResult, $"assign role '{role}' to '{email}'");
         }
+    }
+
+    private async Task SeedContactDirectoryAsync(CancellationToken cancellationToken)
+    {
+        if (await dbContext.ContactDirectoryEntries.AnyAsync(cancellationToken))
+        {
+            return;
+        }
+
+        var contacts = new[]
+        {
+            ContactDirectoryEntry.Create(
+                "Ava Thompson",
+                "ava.thompson@example.com",
+                "0412 200 100",
+                "Harbour View Residences",
+                "12B",
+                "Ava Thompson"),
+            ContactDirectoryEntry.Create(
+                "Leo Chen",
+                "leo.chen@example.com",
+                "0412 200 101",
+                "Northside Apartments",
+                "8A",
+                "Leo Chen"),
+            ContactDirectoryEntry.Create(
+                "Mia Patel",
+                "mia.patel@example.com",
+                "0412 200 102",
+                "Elm Street Townhomes",
+                "3",
+                "Mia Patel"),
+            ContactDirectoryEntry.Create(
+                "Noah Williams",
+                "noah.williams@example.com",
+                "0412 200 103",
+                "Cityscape Lofts",
+                "19D",
+                "Noah Williams"),
+            ContactDirectoryEntry.Create(
+                "Harper Ellis",
+                "owner@propops.local",
+                "0412 200 104",
+                "Harbour View Residences",
+                string.Empty,
+                "Harbour View Residences Owner")
+        };
+
+        await dbContext.ContactDirectoryEntries.AddRangeAsync(contacts, cancellationToken);
+        await dbContext.SaveChangesAsync(cancellationToken);
     }
 
     private static void EnsureSucceeded(IdentityResult result, string action)

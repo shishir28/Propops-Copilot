@@ -1,0 +1,157 @@
+@baseUrl = http://localhost:8095
+@managerEmail = manager@propops.local
+@managerPassword = PropOps!Manager1
+@tenantEmail = tenant@propops.local
+@tenantPassword = PropOps!Tenant1
+@vendorEmail = vendor@propops.local
+@vendorPassword = PropOps!Vendor1
+@timestamp = {{$timestamp}}
+
+### Health check
+GET {{baseUrl}}/health
+
+### Manager login
+# @name managerLogin
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{managerEmail}}",
+  "password": "{{managerPassword}}"
+}
+
+### Current manager user
+GET {{baseUrl}}/api/auth/me
+Authorization: Bearer {{managerLogin.response.body.accessToken}}
+
+### Tenant login
+# @name tenantLogin
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{tenantEmail}}",
+  "password": "{{tenantPassword}}"
+}
+
+### Vendor login
+# @name vendorLogin
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{vendorEmail}}",
+  "password": "{{vendorPassword}}"
+}
+
+### Create a portal maintenance request as manager
+POST {{baseUrl}}/api/maintenanceRequests
+Authorization: Bearer {{managerLogin.response.body.accessToken}}
+Content-Type: application/json
+
+{
+  "submitterName": "Jordan Blake",
+  "emailAddress": "manager@propops.local",
+  "phoneNumber": "0412200100",
+  "propertyName": "Harbour View Residences",
+  "unitNumber": "22A",
+  "description": "Bathroom tap is leaking constantly and water is pooling near the vanity. Ref {{timestamp}}.",
+  "category": "Plumbing",
+  "priority": "High",
+  "channel": "Portal"
+}
+
+### List maintenance requests as manager
+GET {{baseUrl}}/api/maintenanceRequests
+Authorization: Bearer {{managerLogin.response.body.accessToken}}
+
+### Create a maintenance request as tenant
+POST {{baseUrl}}/api/maintenanceRequests
+Authorization: Bearer {{tenantLogin.response.body.accessToken}}
+Content-Type: application/json
+
+{
+  "submitterName": "Ava Thompson",
+  "emailAddress": "tenant@propops.local",
+  "phoneNumber": "0412200100",
+  "propertyName": "Harbour View Residences",
+  "unitNumber": "12B",
+  "description": "Kitchen sink is leaking under the cabinet and the floor is getting wet. Ref {{timestamp}}.",
+  "category": "Plumbing",
+  "priority": "High",
+  "channel": "Portal"
+}
+
+### Vendor should be blocked from viewing queue
+GET {{baseUrl}}/api/maintenanceRequests
+Authorization: Bearer {{vendorLogin.response.body.accessToken}}
+
+### Level 1 - email intake connector
+POST {{baseUrl}}/api/intakeConnectors/email
+Authorization: Bearer {{managerLogin.response.body.accessToken}}
+Content-Type: application/json
+
+{
+  "submitterName": "Ava Thompson",
+  "emailAddress": "ava.thompson@example.com",
+  "subject": "Leaking sink in 12B",
+  "messageBody": "Hi team, the kitchen sink is leaking heavily under the cabinet and water is spreading across the floor.",
+  "phoneNumber": "0412200100",
+  "propertyHint": "",
+  "unitHint": "",
+  "sourceReference": "EMAIL-{{timestamp}}",
+  "receivedAtUtc": "2026-04-25T11:30:00Z"
+}
+
+### Level 1 - SMS / chat intake connector
+POST {{baseUrl}}/api/intakeConnectors/sms-chat
+Authorization: Bearer {{managerLogin.response.body.accessToken}}
+Content-Type: application/json
+
+{
+  "submitterName": "Mia Patel",
+  "phoneNumber": "0412200102",
+  "messageBody": "Front door lock is jammed. I cannot secure the property tonight.",
+  "emailAddress": "",
+  "propertyHint": "",
+  "unitHint": "",
+  "sourceReference": "SMS-{{timestamp}}",
+  "receivedAtUtc": "2026-04-25T11:30:00Z"
+}
+
+### Level 1 - phone note intake connector
+POST {{baseUrl}}/api/intakeConnectors/phone-note
+Authorization: Bearer {{managerLogin.response.body.accessToken}}
+Content-Type: application/json
+
+{
+  "submitterName": "Noah Williams",
+  "phoneNumber": "0412200103",
+  "emailAddress": "noah.williams@example.com",
+  "note": "Resident called to report the dishwasher stopped mid-cycle and left water in the base tray.",
+  "propertyHint": "",
+  "unitHint": "",
+  "sourceReference": "CALL-{{timestamp}}",
+  "receivedAtUtc": "2026-04-25T11:30:00Z"
+}
+
+### Level 1 - recent normalized submissions
+GET {{baseUrl}}/api/intakeConnectors/recent
+Authorization: Bearer {{managerLogin.response.body.accessToken}}
+
+### Level 1 - negative case for unknown contact without property metadata
+POST {{baseUrl}}/api/intakeConnectors/email
+Authorization: Bearer {{managerLogin.response.body.accessToken}}
+Content-Type: application/json
+
+{
+  "submitterName": "Unknown Person",
+  "emailAddress": "unknown.person@example.com",
+  "subject": "Need help",
+  "messageBody": "Something is broken in the apartment and I need a hand.",
+  "phoneNumber": "",
+  "propertyHint": "",
+  "unitHint": "",
+  "sourceReference": "EMAIL-FAIL-{{timestamp}}",
+  "receivedAtUtc": "2026-04-25T11:30:00Z"
+}

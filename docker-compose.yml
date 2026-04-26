@@ -20,14 +20,28 @@ services:
       dockerfile: src/backend/PropOpsCopilot.Api/Dockerfile
     container_name: propops-api
     depends_on:
+      ai-service:
+        condition: service_healthy
       postgres:
         condition: service_healthy
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:8080
       ConnectionStrings__PropOpsDb: Host=postgres;Port=5432;Database=propops;Username=propops;Password=propops
+      AiService__BaseUrl: http://ai-service:8000
     ports:
       - "8095:8080"
+
+  ai-service:
+    build:
+      context: .
+      dockerfile: src/ai/propops-ai-service/Dockerfile
+    container_name: propops-ai-service
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health').read()"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   frontend:
     build:
@@ -38,6 +52,23 @@ services:
       - api
     ports:
       - "4315:4200"
+
+  playwright:
+    profiles: ["test"]
+    build:
+      context: .
+      dockerfile: src/frontend/Dockerfile.playwright
+    depends_on:
+      api:
+        condition: service_started
+      frontend:
+        condition: service_started
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      PLAYWRIGHT_FRONTEND_URL: http://host.docker.internal:4315
+      PLAYWRIGHT_API_URL: http://host.docker.internal:8095
+    working_dir: /app
 
 volumes:
   postgres-data:

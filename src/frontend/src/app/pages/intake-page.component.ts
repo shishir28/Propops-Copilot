@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -55,11 +56,14 @@ export class IntakePageComponent {
   protected submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.createdRequest.set(null);
+      this.error.set('Complete the required fields before creating the request.');
       return;
     }
 
     this.saving.set(true);
     this.error.set(null);
+    this.createdRequest.set(null);
 
     const payload = this.form.getRawValue() as CreateMaintenanceRequestPayload;
 
@@ -82,10 +86,37 @@ export class IntakePageComponent {
             channel: 'Portal'
           });
         },
-        error: () => {
-          this.error.set('The request could not be saved. Please try again.');
+        error: (response: HttpErrorResponse) => {
+          this.error.set(
+            typeof response.error?.detail === 'string'
+              ? response.error.detail
+              : 'The request could not be saved. Please try again.'
+          );
           this.saving.set(false);
         }
       });
+  }
+
+  protected showFieldError(controlName: keyof typeof this.form.controls): boolean {
+    const control = this.form.controls[controlName];
+    return control.invalid && (control.dirty || control.touched);
+  }
+
+  protected fieldErrorMessage(controlName: keyof typeof this.form.controls): string {
+    const control = this.form.controls[controlName];
+
+    if (control.hasError('required')) {
+      return 'This field is required.';
+    }
+
+    if (control.hasError('email')) {
+      return 'Enter a valid email address.';
+    }
+
+    if (control.hasError('minlength')) {
+      return 'Please provide a more detailed description.';
+    }
+
+    return 'Please review this field.';
   }
 }

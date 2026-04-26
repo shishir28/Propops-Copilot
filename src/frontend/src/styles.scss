@@ -35,6 +35,7 @@
   --pill-high-fg: #b56a00;
   --pill-emergency-bg: rgba(230, 74, 25, 0.14);
   --pill-emergency-fg: #c23b15;
+  --pill-success-fg: #1c7c54;
   background: var(--bg-app);
   color: var(--text-primary);
 }
@@ -75,6 +76,7 @@
   --pill-high-fg: #ffc472;
   --pill-emergency-bg: rgba(255, 109, 77, 0.2);
   --pill-emergency-fg: #ff9b84;
+  --pill-success-fg: #7fe0b0;
 }
 
 * {

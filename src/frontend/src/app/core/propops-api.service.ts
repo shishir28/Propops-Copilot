@@ -5,6 +5,11 @@ import { Observable } from 'rxjs';
 import {
   CreateMaintenanceRequestPayload,
   DashboardOverview,
+  IngestEmailPayload,
+  IngestPhoneNotePayload,
+  IngestSmsChatPayload,
+  IntakeIngestionResult,
+  IntakeSubmission,
   MaintenanceRequest
 } from '../models/propops.models';
 
@@ -17,9 +22,25 @@ export class PropOpsApiService {
     return this.http.get<DashboardOverview>(`${this.apiBaseUrl}/dashboard/overview`);
   }
 
+  getRecentIntakeSubmissions(): Observable<IntakeSubmission[]> {
+    return this.http.get<IntakeSubmission[]>(`${this.apiBaseUrl}/intakeConnectors/recent`);
+  }
+
   createMaintenanceRequest(
     payload: CreateMaintenanceRequestPayload
   ): Observable<MaintenanceRequest> {
     return this.http.post<MaintenanceRequest>(`${this.apiBaseUrl}/maintenanceRequests`, payload);
+  }
+
+  ingestEmail(payload: IngestEmailPayload): Observable<IntakeIngestionResult> {
+    return this.http.post<IntakeIngestionResult>(`${this.apiBaseUrl}/intakeConnectors/email`, payload);
+  }
+
+  ingestSmsChat(payload: IngestSmsChatPayload): Observable<IntakeIngestionResult> {
+    return this.http.post<IntakeIngestionResult>(`${this.apiBaseUrl}/intakeConnectors/sms-chat`, payload);
+  }
+
+  ingestPhoneNote(payload: IngestPhoneNotePayload): Observable<IntakeIngestionResult> {
+    return this.http.post<IntakeIngestionResult>(`${this.apiBaseUrl}/intakeConnectors/phone-note`, payload);
   }
 }

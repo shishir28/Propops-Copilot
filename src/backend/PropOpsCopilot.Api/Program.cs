@@ -2,6 +2,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using PropOpsCopilot.Api.Configuration;
 using PropOpsCopilot.Application;
 using PropOpsCopilot.Infrastructure;
 using PropOpsCopilot.Infrastructure.Identity;
@@ -11,10 +12,20 @@ var builder = WebApplication.CreateBuilder(args);
 
 var jwtOptions = builder.Configuration.GetSection(PortalJwtOptions.SectionName).Get<PortalJwtOptions>()
     ?? throw new InvalidOperationException("JWT settings are missing.");
+var aiServiceOptions = builder.Configuration.GetSection(AiServiceOptions.SectionName).Get<AiServiceOptions>()
+    ?? throw new InvalidOperationException("AI service settings are missing.");
 
 builder.Services
     .AddApplication()
     .AddInfrastructure(builder.Configuration);
+builder.Services.Configure<AiServiceOptions>(builder.Configuration.GetSection(AiServiceOptions.SectionName));
+builder.Services.AddHttpClient(
+    "propops-ai",
+    client =>
+    {
+        client.BaseAddress = new Uri(aiServiceOptions.BaseUrl);
+        client.Timeout = TimeSpan.FromSeconds(60);
+    });
 
 builder.Services.AddCors(options =>
 {
@@ -22,7 +33,13 @@ builder.Services.AddCors(options =>
         "frontend",
         policy =>
         {
-            policy.WithOrigins("http://localhost:4200", "http://127.0.0.1:4200", "http://localhost:4315", "http://127.0.0.1:4315")
+            policy.WithOrigins(
+                    "http://localhost:4200",
+                    "http://127.0.0.1:4200",
+                    "http://localhost:4315",
+                    "http://127.0.0.1:4315",
+                    "http://host.docker.internal:4200",
+                    "http://host.docker.internal:4315")
                 .AllowAnyHeader()
                 .AllowAnyMethod();
         });
