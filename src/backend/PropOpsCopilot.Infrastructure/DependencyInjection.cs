@@ -56,6 +56,8 @@ public static class DependencyInjection
         services.AddScoped<IMaintenanceRequestRepository, MaintenanceRequestRepository>();
         services.AddScoped<IMaintenanceTriageReviewRepository, MaintenanceTriageReviewRepository>();
         services.AddScoped<IMaintenanceOperationalActionRepository, MaintenanceOperationalActionRepository>();
+        services.AddScoped<IMaintenanceResolutionFeedbackRepository, MaintenanceResolutionFeedbackRepository>();
+        services.AddScoped<IFineTuningExampleCandidateRepository, FineTuningExampleCandidateRepository>();
         services.AddScoped<IPortalIdentityService, PortalIdentityService>();
         services.AddScoped<PropOpsDataSeeder>();
 

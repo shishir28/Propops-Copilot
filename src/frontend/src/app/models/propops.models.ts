@@ -13,7 +13,17 @@ export type MaintenanceRequestStatus =
   | 'InReview'
   | 'Scheduled'
   | 'InProgress'
-  | 'Completed';
+  | 'Completed'
+  | 'Cancelled';
+export type MaintenanceDispatchOutcome =
+  | 'Completed'
+  | 'Escalated'
+  | 'Duplicate'
+  | 'Cancelled'
+  | 'NoAccess'
+  | 'VendorUnavailable'
+  | 'TenantResolved'
+  | 'NotMaintenance';
 
 export type IntakeChannel = 'Portal' | 'Email' | 'SmsChat' | 'PhoneNote';
 export type ConnectorChannel = Exclude<IntakeChannel, 'Portal'>;
@@ -167,10 +177,55 @@ export interface MaintenanceOperationalAction {
   createdAtUtc: string;
 }
 
+export interface MaintenanceResolutionFeedback {
+  id: string;
+  maintenanceRequestId: string;
+  maintenanceTriageReviewId: string | null;
+  finalResolution: string;
+  correctedCategory: MaintenanceRequestCategory;
+  correctedPriority: MaintenanceRequestPriority;
+  finalTenantResponse: string;
+  dispatchOutcome: MaintenanceDispatchOutcome;
+  resolutionNotes: string;
+  excludeFromTraining: boolean;
+  exclusionReason: string;
+  resolvedBy: string;
+  resolvedAtUtc: string;
+}
+
 export interface MaintenanceOperationsDetail {
   request: MaintenanceRequest;
   latestReview: MaintenanceTriageReview | null;
+  latestFeedback: MaintenanceResolutionFeedback | null;
   actions: MaintenanceOperationalAction[];
+}
+
+export interface SubmitMaintenanceResolutionFeedbackPayload {
+  finalResolution: string;
+  correctedCategory: MaintenanceRequestCategory;
+  correctedPriority: MaintenanceRequestPriority;
+  finalTenantResponse: string;
+  dispatchOutcome: MaintenanceDispatchOutcome;
+  resolutionNotes: string;
+  excludeFromTraining: boolean;
+  exclusionReason: string;
+}
+
+export interface FineTuningExampleCandidate {
+  id: string;
+  maintenanceRequestId: string;
+  maintenanceResolutionFeedbackId: string;
+  status: 'Candidate' | 'Approved' | 'Excluded';
+  inputSnapshotJson: string;
+  outputSnapshotJson: string;
+  metadataSnapshotJson: string;
+  exclusionReason: string;
+  createdAtUtc: string;
+}
+
+export interface FineTuningDatasetExport {
+  exampleCount: number;
+  jsonl: string;
 }
 
 export interface IngestEmailPayload {

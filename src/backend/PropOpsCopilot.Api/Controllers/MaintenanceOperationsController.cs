@@ -116,6 +116,42 @@ public sealed class MaintenanceOperationsController(MaintenanceOperationsService
             createdBy,
             token), cancellationToken);
 
+    [HttpPost("resolution-feedback")]
+    [ProducesResponseType<MaintenanceOperationsDetailDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<MaintenanceOperationsDetailDto>> SubmitResolutionFeedback(
+        Guid maintenanceRequestId,
+        [FromBody] SubmitMaintenanceResolutionFeedbackCommand command,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var resolvedBy = User.Identity?.Name ?? User.FindFirst("email")?.Value ?? "staff";
+            return Ok(await maintenanceOperationsService.SubmitResolutionFeedbackAsync(
+                maintenanceRequestId,
+                command,
+                resolvedBy,
+                cancellationToken));
+        }
+        catch (ArgumentException exception)
+        {
+            return BadRequest(new ProblemDetails
+            {
+                Title = "Invalid resolution feedback",
+                Detail = exception.Message
+            });
+        }
+        catch (KeyNotFoundException exception)
+        {
+            return NotFound(new ProblemDetails
+            {
+                Title = "Maintenance request not found",
+                Detail = exception.Message
+            });
+        }
+    }
+
     private async Task<ActionResult<MaintenanceOperationsDetailDto>> RunActionAsync(
         Func<string, CancellationToken, Task<MaintenanceOperationsDetailDto>> action,
         CancellationToken cancellationToken)

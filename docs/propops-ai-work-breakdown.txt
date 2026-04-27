@@ -94,16 +94,26 @@ Level 5 - Learning loop
 -----------------------
 
 9. Capture feedback data
-   - final resolution
-   - corrected priority/category
-   - edited response draft
-   - dispatch outcome
+   - final resolution [implemented]
+   - corrected priority/category [implemented]
+   - edited response draft [implemented as final tenant response]
+   - dispatch outcome [implemented]
 
 10. Prepare fine-tuning dataset
-    - convert reviewed cases into training examples
-    - clean labels
-    - stable structured outputs
-    - remove noisy/low-quality examples
+    - convert reviewed cases into training examples [implemented as stable candidates]
+    - clean labels [implemented through corrected category/priority]
+    - stable structured outputs [implemented as JSON snapshots]
+    - remove noisy/low-quality examples [implemented through exclusion rules]
+
+Level 5 note:
+- feedback capture lives in the .NET/API and Angular operations workflow, not in the live Python inference path
+- reviewed and resolved cases create fine-tuning candidate snapshots for later export
+- noisy, duplicate, cancelled, non-maintenance, or explicitly excluded cases are marked excluded from training
+- future synthetic data generation should add offline Python scripts and scenario libraries to accelerate dataset volume:
+   - `synthetic_maintenance_scenarios.json`
+   - `generate_synthetic_dataset.py`
+   - `validate_dataset.py`
+   - separate synthetic training candidates from synthetic eval/guardrail cases
 
 Level 6 - Model specialization
 ------------------------------
@@ -155,4 +165,4 @@ Important design rule
 Immediate next milestone
 ------------------------
 
-Level 5 feedback capture and learning-loop preparation from reviewed triage decisions and action outcomes
+Synthetic dataset generation scripts and a curated scenario library for solo-development training volume

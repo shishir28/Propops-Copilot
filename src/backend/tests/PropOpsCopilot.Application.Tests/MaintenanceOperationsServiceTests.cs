@@ -15,7 +15,7 @@ public sealed class MaintenanceOperationsServiceTests
         var requestRepository = new InMemoryMaintenanceRequestRepository([request]);
         var reviewRepository = new InMemoryTriageReviewRepository();
         var actionRepository = new InMemoryOperationalActionRepository();
-        var service = new MaintenanceOperationsService(requestRepository, reviewRepository, actionRepository);
+        var service = CreateService(requestRepository, reviewRepository, actionRepository);
 
         var result = await service.SubmitTriageReviewAsync(
             request.Id,
@@ -57,7 +57,7 @@ public sealed class MaintenanceOperationsServiceTests
     public async Task CreateWorkOrderAsync_LogsActionAndSchedulesRequest()
     {
         var request = CreateRequest();
-        var service = new MaintenanceOperationsService(
+        var service = CreateService(
             new InMemoryMaintenanceRequestRepository([request]),
             new InMemoryTriageReviewRepository(),
             new InMemoryOperationalActionRepository());
@@ -78,7 +78,7 @@ public sealed class MaintenanceOperationsServiceTests
     {
         var request = CreateRequest();
         request.TransitionTo(MaintenanceRequestStatus.InReview);
-        var service = new MaintenanceOperationsService(
+        var service = CreateService(
             new InMemoryMaintenanceRequestRepository([request]),
             new InMemoryTriageReviewRepository(),
             new InMemoryOperationalActionRepository());
@@ -94,6 +94,77 @@ public sealed class MaintenanceOperationsServiceTests
         Assert.Equal("A plumber has been assigned.", action.Detail);
     }
 
+    [Fact]
+    public async Task SubmitResolutionFeedbackAsync_CreatesDatasetCandidateForCleanReviewedCase()
+    {
+        var request = CreateRequest();
+        var reviewRepository = new InMemoryTriageReviewRepository();
+        var actionRepository = new InMemoryOperationalActionRepository();
+        var feedbackRepository = new InMemoryResolutionFeedbackRepository();
+        var candidateRepository = new InMemoryFineTuningExampleCandidateRepository();
+        var service = CreateService(
+            new InMemoryMaintenanceRequestRepository([request]),
+            reviewRepository,
+            actionRepository,
+            feedbackRepository,
+            candidateRepository);
+
+        await service.SubmitTriageReviewAsync(
+            request.Id,
+            CreateReviewCommand(),
+            "manager@propops.local");
+        await service.CreateWorkOrderAsync(request.Id, new CreateWorkOrderCommand("Create urgent plumbing work order."), "dispatcher@propops.local");
+
+        var result = await service.SubmitResolutionFeedbackAsync(
+            request.Id,
+            new SubmitMaintenanceResolutionFeedbackCommand(
+                "Licensed plumber replaced the leaking sink trap and confirmed the cabinet is dry.",
+                MaintenanceRequestCategory.Plumbing,
+                MaintenanceRequestPriority.High,
+                "The leak has been repaired and the plumber confirmed the area is safe.",
+                MaintenanceDispatchOutcome.Completed,
+                "Tenant confirmed access and completion.",
+                false,
+                string.Empty),
+            "manager@propops.local");
+
+        Assert.NotNull(result.LatestFeedback);
+        Assert.Equal(MaintenanceRequestStatus.Completed, result.Request.Status);
+        var candidate = Assert.Single(candidateRepository.Candidates);
+        Assert.Equal(FineTuningCandidateStatus.Candidate, candidate.Status);
+        Assert.Contains("\"category\":\"Plumbing\"", candidate.OutputSnapshotJson);
+    }
+
+    [Fact]
+    public async Task SubmitResolutionFeedbackAsync_ExcludesNoisyCaseFromTraining()
+    {
+        var request = CreateRequest();
+        var candidateRepository = new InMemoryFineTuningExampleCandidateRepository();
+        var service = CreateService(
+            new InMemoryMaintenanceRequestRepository([request]),
+            new InMemoryTriageReviewRepository(),
+            new InMemoryOperationalActionRepository(),
+            new InMemoryResolutionFeedbackRepository(),
+            candidateRepository);
+
+        await service.SubmitResolutionFeedbackAsync(
+            request.Id,
+            new SubmitMaintenanceResolutionFeedbackCommand(
+                "Duplicate request closed.",
+                MaintenanceRequestCategory.General,
+                MaintenanceRequestPriority.Normal,
+                "This was a duplicate request and has been closed.",
+                MaintenanceDispatchOutcome.Duplicate,
+                "Duplicate of another open ticket.",
+                true,
+                "Duplicate request."),
+            "manager@propops.local");
+
+        var candidate = Assert.Single(candidateRepository.Candidates);
+        Assert.Equal(FineTuningCandidateStatus.Excluded, candidate.Status);
+        Assert.Contains("Duplicate request", candidate.ExclusionReason);
+    }
+
     private static MaintenanceRequest CreateRequest() =>
         MaintenanceRequest.Create(
             "Jordan Blake",
@@ -105,6 +176,44 @@ public sealed class MaintenanceOperationsServiceTests
             MaintenanceRequestCategory.General,
             MaintenanceRequestPriority.Normal,
             IntakeChannel.Portal);
+
+    private static SubmitMaintenanceTriageReviewCommand CreateReviewCommand() =>
+        new(
+            new MaintenanceTriageOutputContractDto(
+                "General",
+                "Normal",
+                "General Maintenance Contractor",
+                "Route for staff review.",
+                "Normal General request.",
+                "We are reviewing the request."),
+            new MaintenanceTriageGuardrailResultDto(
+                true,
+                true,
+                true,
+                0.72,
+                0.68,
+                false,
+                false,
+                []),
+            MaintenanceRequestCategory.Plumbing,
+            MaintenanceRequestPriority.High,
+            "Licensed Plumber",
+            "Create an urgent work order and assign the preferred plumber.",
+            "High Plumbing issue at Harbour View Residences / 22A.",
+            "Thanks, we are assigning a plumber now.");
+
+    private static MaintenanceOperationsService CreateService(
+        IMaintenanceRequestRepository requestRepository,
+        IMaintenanceTriageReviewRepository reviewRepository,
+        IMaintenanceOperationalActionRepository actionRepository,
+        IMaintenanceResolutionFeedbackRepository? feedbackRepository = null,
+        IFineTuningExampleCandidateRepository? candidateRepository = null) =>
+        new(
+            requestRepository,
+            reviewRepository,
+            actionRepository,
+            feedbackRepository ?? new InMemoryResolutionFeedbackRepository(),
+            candidateRepository ?? new InMemoryFineTuningExampleCandidateRepository());
 
     private sealed class InMemoryMaintenanceRequestRepository(IReadOnlyList<MaintenanceRequest> seedRequests)
         : IMaintenanceRequestRepository
@@ -167,6 +276,39 @@ public sealed class MaintenanceOperationsServiceTests
         public Task AddAsync(MaintenanceOperationalAction action, CancellationToken cancellationToken = default)
         {
             actions.Add(action);
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class InMemoryResolutionFeedbackRepository : IMaintenanceResolutionFeedbackRepository
+    {
+        private readonly List<MaintenanceResolutionFeedback> feedbackItems = [];
+
+        public Task<MaintenanceResolutionFeedback?> GetLatestForRequestAsync(
+            Guid maintenanceRequestId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(feedbackItems
+                .Where(feedback => feedback.MaintenanceRequestId == maintenanceRequestId)
+                .OrderByDescending(feedback => feedback.ResolvedAtUtc)
+                .FirstOrDefault());
+
+        public Task AddAsync(MaintenanceResolutionFeedback feedback, CancellationToken cancellationToken = default)
+        {
+            feedbackItems.Add(feedback);
+            return Task.CompletedTask;
+        }
+    }
+
+    private sealed class InMemoryFineTuningExampleCandidateRepository : IFineTuningExampleCandidateRepository
+    {
+        public List<FineTuningExampleCandidate> Candidates { get; } = [];
+
+        public Task<IReadOnlyList<FineTuningExampleCandidate>> ListAsync(CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<FineTuningExampleCandidate>>(Candidates);
+
+        public Task AddAsync(FineTuningExampleCandidate candidate, CancellationToken cancellationToken = default)
+        {
+            Candidates.Add(candidate);
             return Task.CompletedTask;
         }
     }

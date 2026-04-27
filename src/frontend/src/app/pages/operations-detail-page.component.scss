@@ -10,6 +10,7 @@
 .review-panel,
 .action-panel,
 .history-panel,
+.feedback-panel,
 .state-panel {
   border: 1px solid var(--border-soft);
   border-radius: 24px;
@@ -78,6 +79,7 @@ h3 {
 .review-panel,
 .action-panel,
 .history-panel,
+.feedback-panel,
 .state-panel {
   padding: 24px;
 }
@@ -118,14 +120,19 @@ dd {
 }
 
 .review-form,
-.action-grid {
+.action-grid,
+.feedback-form {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
 }
 
 .review-form label:nth-of-type(n + 4),
-.action-grid label {
+.action-grid label,
+.feedback-form label:first-child,
+.feedback-form label:nth-of-type(5),
+.feedback-form label:nth-of-type(6),
+.checkbox-row {
   grid-column: span 2;
 }
 
@@ -194,8 +201,20 @@ button:disabled {
   color: var(--pill-emergency-fg);
 }
 
-.action-panel {
+.action-panel,
+.history-panel,
+.feedback-panel {
   margin-bottom: 20px;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.checkbox-row input {
+  width: auto;
 }
 
 .action-list {
@@ -243,12 +262,15 @@ button:disabled {
 
   .operations-layout,
   .review-form,
-  .action-grid {
+  .action-grid,
+  .feedback-form {
     grid-template-columns: 1fr;
   }
 
   .review-form label:nth-of-type(n + 4),
-  .action-grid label {
+  .action-grid label,
+  .feedback-form label,
+  .checkbox-row {
     grid-column: span 1;
   }
 }

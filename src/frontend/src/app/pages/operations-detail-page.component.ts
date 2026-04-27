@@ -7,6 +7,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { PropOpsApiService } from '../core/propops-api.service';
 import {
   MaintenanceOperationsDetail,
+  MaintenanceDispatchOutcome,
   MaintenanceRequestCategory,
   MaintenanceRequestPriority,
   MaintenanceTriageInferenceResult,
@@ -35,6 +36,16 @@ export class OperationsDetailPageComponent implements OnInit {
     'General'
   ];
   protected readonly priorities: MaintenanceRequestPriority[] = ['Low', 'Normal', 'High', 'Emergency'];
+  protected readonly dispatchOutcomes: MaintenanceDispatchOutcome[] = [
+    'Completed',
+    'Escalated',
+    'Duplicate',
+    'Cancelled',
+    'NoAccess',
+    'VendorUnavailable',
+    'TenantResolved',
+    'NotMaintenance'
+  ];
 
   protected readonly detail = signal<MaintenanceOperationsDetail | null>(null);
   protected readonly inference = signal<MaintenanceTriageInferenceResult | null>(null);
@@ -57,6 +68,17 @@ export class OperationsDetailPageComponent implements OnInit {
     vendorName: [''],
     tenantMessage: [''],
     internalNote: ['']
+  });
+
+  protected readonly feedbackForm = this.formBuilder.nonNullable.group({
+    finalResolution: ['', Validators.required],
+    correctedCategory: ['General' as MaintenanceRequestCategory, Validators.required],
+    correctedPriority: ['Normal' as MaintenanceRequestPriority, Validators.required],
+    finalTenantResponse: ['', Validators.required],
+    dispatchOutcome: ['Completed' as MaintenanceDispatchOutcome, Validators.required],
+    resolutionNotes: [''],
+    excludeFromTraining: [false],
+    exclusionReason: ['']
   });
 
   private maintenanceRequestId = '';
@@ -156,6 +178,18 @@ export class OperationsDetailPageComponent implements OnInit {
     );
   }
 
+  protected submitResolutionFeedback(): void {
+    if (this.feedbackForm.invalid) {
+      this.feedbackForm.markAllAsTouched();
+      return;
+    }
+
+    this.runAction(
+      this.api.submitResolutionFeedback(this.maintenanceRequestId, this.feedbackForm.getRawValue()),
+      'Resolution feedback saved and dataset eligibility evaluated.'
+    );
+  }
+
   protected trackByAction(_: number, action: { id: string }): string {
     return action.id;
   }
@@ -212,6 +246,26 @@ export class OperationsDetailPageComponent implements OnInit {
         workOrderSummary: latestReview.finalInternalSummary,
         vendorName: latestReview.finalVendorType,
         tenantMessage: latestReview.finalTenantResponseDraft
+      });
+      if (!detail.latestFeedback) {
+        this.feedbackForm.patchValue({
+          correctedCategory: latestReview.finalCategory,
+          correctedPriority: latestReview.finalPriority,
+          finalTenantResponse: latestReview.finalTenantResponseDraft
+        });
+      }
+    }
+    const latestFeedback = detail.latestFeedback;
+    if (latestFeedback) {
+      this.feedbackForm.patchValue({
+        finalResolution: latestFeedback.finalResolution,
+        correctedCategory: latestFeedback.correctedCategory,
+        correctedPriority: latestFeedback.correctedPriority,
+        finalTenantResponse: latestFeedback.finalTenantResponse,
+        dispatchOutcome: latestFeedback.dispatchOutcome,
+        resolutionNotes: latestFeedback.resolutionNotes,
+        excludeFromTraining: latestFeedback.excludeFromTraining,
+        exclusionReason: latestFeedback.exclusionReason
       });
     }
   }

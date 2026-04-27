@@ -17,6 +17,10 @@ public sealed class PropOpsDbContext(DbContextOptions<PropOpsDbContext> options)
 
     public DbSet<MaintenanceOperationalAction> MaintenanceOperationalActions => Set<MaintenanceOperationalAction>();
 
+    public DbSet<MaintenanceResolutionFeedback> MaintenanceResolutionFeedback => Set<MaintenanceResolutionFeedback>();
+
+    public DbSet<FineTuningExampleCandidate> FineTuningExampleCandidates => Set<FineTuningExampleCandidate>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

@@ -95,13 +95,14 @@ Switch to an OpenAI-compatible instruct model endpoint by setting:
 - `PROP_OPS_AI_OPENAI_BASE_URL=<your-openai-compatible-base-url>`
 - `PROP_OPS_AI_OPENAI_API_KEY=<optional-api-key>`
 
-Levels 2, 3, and 4 are now implemented across that boundary:
+Levels 2, 3, 4, and the first Level 5 learning-loop slice are now implemented across that boundary:
 
 - the Python service owns the structured maintenance knowledge base and triage contract schemas
 - the Python service can run baseline triage inference and guardrails through a LangGraph workflow behind a provider adapter
 - the .NET API exposes staff-facing endpoints that prepare rules, retrieve contracts, and infer a triage decision for an existing maintenance request
 - the .NET API persists staff-approved or edited triage decisions, creates simulated work-order references, assigns vendors, logs tenant notifications, and records internal notes
 - the Angular staff operations page lets property managers and dispatchers run AI triage, edit/approve the result, and trigger the Level 4 action log
+- the .NET API captures resolution feedback and creates stable fine-tuning candidate snapshots without changing the live Python inference path
 
 ## Playwright tests
 
@@ -112,6 +113,7 @@ The frontend workspace now includes Playwright coverage for:
 - Level 2 rules and knowledge retrieval through the .NET API
 - Level 3 baseline inference and guardrail fallback behavior through the .NET API
 - Level 4 human review and action logging through the .NET API
+- Level 5 resolution feedback and dataset candidate export through the .NET API
 
 Start the full stack first:
 
@@ -231,9 +233,9 @@ Current access boundaries:
 ## Automated test coverage
 
 - Angular unit tests cover auth, theme persistence, API service calls, HTTP auth interception, and route guards.
-- .NET unit tests cover dashboard metrics, maintenance request creation/mapping, omnichannel intake preprocessing, AI preparation/inference HTTP orchestration, and Level 4 review/action workflows.
+- .NET unit tests cover dashboard metrics, maintenance request creation/mapping, omnichannel intake preprocessing, AI preparation/inference HTTP orchestration, Level 4 review/action workflows, and Level 5 dataset candidate export.
 - Python unit tests cover Level 2 contract/retrieval behavior, heuristic inference, guardrail fallback, and inference settings validation.
 
 ## Deferred scope
 
-This version intentionally keeps action integrations simulated inside the application rather than calling external work-order, vendor, SMS, or email systems. Fine-tuning and vLLM-backed serving remain deferred. The runtime boundary is already active: Angular talks only to the .NET API, and the .NET API is the only application allowed to call the Python AI service for current and future AI features.
+This version intentionally keeps action integrations simulated inside the application rather than calling external work-order, vendor, SMS, or email systems. Synthetic data generation scripts, fine-tuning, and vLLM-backed serving remain deferred. The runtime boundary is already active: Angular talks only to the .NET API, and the .NET API is the only application allowed to call the Python AI service for current and future AI features.

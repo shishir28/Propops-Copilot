@@ -153,6 +153,43 @@ public sealed class PropOpsDataSeeder(
                     FOREIGN KEY ("MaintenanceRequestId") REFERENCES maintenance_requests ("Id") ON DELETE CASCADE
             );
 
+            CREATE TABLE IF NOT EXISTS maintenance_resolution_feedback (
+                "Id" uuid NOT NULL,
+                "MaintenanceRequestId" uuid NOT NULL,
+                "MaintenanceTriageReviewId" uuid NULL,
+                "FinalResolution" character varying(2000) NOT NULL,
+                "CorrectedCategory" character varying(40) NOT NULL,
+                "CorrectedPriority" character varying(40) NOT NULL,
+                "FinalTenantResponse" character varying(1200) NOT NULL,
+                "DispatchOutcome" character varying(60) NOT NULL,
+                "ResolutionNotes" character varying(2000) NOT NULL,
+                "ExcludeFromTraining" boolean NOT NULL,
+                "ExclusionReason" character varying(1000) NOT NULL,
+                "ResolvedBy" character varying(256) NOT NULL,
+                "ResolvedAtUtc" timestamp with time zone NOT NULL,
+                "CreatedAtUtc" timestamp with time zone NOT NULL,
+                CONSTRAINT "PK_maintenance_resolution_feedback" PRIMARY KEY ("Id"),
+                CONSTRAINT "FK_maintenance_resolution_feedback_maintenance_requests_MaintenanceRequestId"
+                    FOREIGN KEY ("MaintenanceRequestId") REFERENCES maintenance_requests ("Id") ON DELETE CASCADE,
+                CONSTRAINT "FK_maintenance_resolution_feedback_maintenance_triage_reviews_MaintenanceTriageReviewId"
+                    FOREIGN KEY ("MaintenanceTriageReviewId") REFERENCES maintenance_triage_reviews ("Id") ON DELETE SET NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS fine_tuning_example_candidates (
+                "Id" uuid NOT NULL,
+                "MaintenanceRequestId" uuid NOT NULL,
+                "MaintenanceResolutionFeedbackId" uuid NOT NULL,
+                "Status" character varying(40) NOT NULL,
+                "InputSnapshotJson" jsonb NOT NULL,
+                "OutputSnapshotJson" jsonb NOT NULL,
+                "MetadataSnapshotJson" jsonb NOT NULL,
+                "ExclusionReason" character varying(1000) NOT NULL,
+                "CreatedAtUtc" timestamp with time zone NOT NULL,
+                CONSTRAINT "PK_fine_tuning_example_candidates" PRIMARY KEY ("Id"),
+                CONSTRAINT "FK_fine_tuning_example_candidates_maintenance_resolution_feedback_MaintenanceResolutionFeedbackId"
+                    FOREIGN KEY ("MaintenanceResolutionFeedbackId") REFERENCES maintenance_resolution_feedback ("Id") ON DELETE CASCADE
+            );
+
             CREATE INDEX IF NOT EXISTS "IX_contact_directory_entries_EmailAddress"
                 ON contact_directory_entries ("EmailAddress");
             CREATE INDEX IF NOT EXISTS "IX_contact_directory_entries_PhoneNumber"
@@ -171,6 +208,16 @@ public sealed class PropOpsDataSeeder(
                 ON maintenance_operational_actions ("MaintenanceRequestId");
             CREATE INDEX IF NOT EXISTS "IX_maintenance_operational_actions_CreatedAtUtc"
                 ON maintenance_operational_actions ("CreatedAtUtc");
+            CREATE INDEX IF NOT EXISTS "IX_maintenance_resolution_feedback_MaintenanceRequestId"
+                ON maintenance_resolution_feedback ("MaintenanceRequestId");
+            CREATE INDEX IF NOT EXISTS "IX_maintenance_resolution_feedback_ResolvedAtUtc"
+                ON maintenance_resolution_feedback ("ResolvedAtUtc");
+            CREATE INDEX IF NOT EXISTS "IX_fine_tuning_example_candidates_MaintenanceRequestId"
+                ON fine_tuning_example_candidates ("MaintenanceRequestId");
+            CREATE INDEX IF NOT EXISTS "IX_fine_tuning_example_candidates_CreatedAtUtc"
+                ON fine_tuning_example_candidates ("CreatedAtUtc");
+            CREATE INDEX IF NOT EXISTS "IX_fine_tuning_example_candidates_Status"
+                ON fine_tuning_example_candidates ("Status");
             """;
 
         await dbContext.Database.ExecuteSqlRawAsync(operationalSchemaSql, cancellationToken);

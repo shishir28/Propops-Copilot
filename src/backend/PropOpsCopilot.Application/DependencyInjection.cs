@@ -12,6 +12,7 @@ public static class DependencyInjection
         services.AddScoped<DashboardService>();
         services.AddScoped<PortalAuthenticationService>();
         services.AddScoped<MaintenanceOperationsService>();
+        services.AddScoped<LearningDatasetService>();
 
         return services;
     }

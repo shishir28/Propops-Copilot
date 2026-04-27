@@ -7,7 +7,7 @@ This Angular application provides the first user-facing experience for PropOps C
 - **Login:** seeded multi-role portal sign-in
 - **Workspace:** shared landing area with role-aware actions
 - **Overview:** operational KPIs and the recent maintenance queue
-- **Operations detail:** staff AI triage review, editable output approval, and action logging
+- **Operations detail:** staff AI triage review, editable output approval, action logging, and resolution feedback capture
 - **New request:** structured maintenance intake form
 
 The shell also includes a persisted light/dark theme switcher.

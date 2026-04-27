@@ -56,6 +56,13 @@ Level 4 builds on the Level 3 result without moving workflow state into the AI r
 - `MaintenanceOperationalAction` stores work-order creation, vendor assignment, tenant notification, and internal-note events
 - staff-only APIs under `/api/maintenanceRequests/{id}/operations` expose the review and action workflow
 
+Level 5 starts the learning loop in the application layer:
+
+- `MaintenanceResolutionFeedback` captures final resolution, corrected labels, final tenant response, dispatch outcome, and training exclusion decisions
+- `FineTuningExampleCandidate` stores stable input/output/metadata JSON snapshots for later dataset export
+- `/api/learning/dataset/candidates` and `/api/learning/dataset/export` expose staff-only dataset curation/export surfaces
+- synthetic data generation is planned as an offline Python/scripted acceleration path, separate from live inference
+
 ## Frontend structure
 
 The Angular application uses standalone components and is organized around:

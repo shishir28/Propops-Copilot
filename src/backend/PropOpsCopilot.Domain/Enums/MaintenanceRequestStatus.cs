@@ -6,5 +6,6 @@ public enum MaintenanceRequestStatus
     InReview,
     Scheduled,
     InProgress,
-    Completed
+    Completed,
+    Cancelled
 }

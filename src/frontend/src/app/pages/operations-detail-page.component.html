@@ -193,4 +193,72 @@
       </div>
     }
   </section>
+
+  <section class="feedback-panel">
+    <div class="panel-header">
+      <div>
+        <p class="eyebrow">Learning loop</p>
+        <h3>Resolution feedback</h3>
+      </div>
+      @if (currentDetail.latestFeedback) {
+        <span>Saved</span>
+      }
+    </div>
+
+    <form [formGroup]="feedbackForm" class="feedback-form" (ngSubmit)="submitResolutionFeedback()">
+      <label>
+        Final resolution
+        <textarea formControlName="finalResolution" rows="3"></textarea>
+      </label>
+
+      <label>
+        Corrected category
+        <select formControlName="correctedCategory">
+          @for (category of categories; track category) {
+            <option [value]="category">{{ category }}</option>
+          }
+        </select>
+      </label>
+
+      <label>
+        Corrected priority
+        <select formControlName="correctedPriority">
+          @for (priority of priorities; track priority) {
+            <option [value]="priority">{{ priority }}</option>
+          }
+        </select>
+      </label>
+
+      <label>
+        Dispatch outcome
+        <select formControlName="dispatchOutcome">
+          @for (outcome of dispatchOutcomes; track outcome) {
+            <option [value]="outcome">{{ outcome }}</option>
+          }
+        </select>
+      </label>
+
+      <label>
+        Final tenant response
+        <textarea formControlName="finalTenantResponse" rows="3"></textarea>
+      </label>
+
+      <label>
+        Resolution notes
+        <textarea formControlName="resolutionNotes" rows="3"></textarea>
+      </label>
+
+      <label class="checkbox-row">
+        <input type="checkbox" formControlName="excludeFromTraining" />
+        Exclude from training dataset
+      </label>
+
+      <label>
+        Exclusion reason
+        <input formControlName="exclusionReason" />
+      </label>
+
+      <button type="submit" [disabled]="busy()">Save feedback</button>
+    </form>
+  </section>
 }

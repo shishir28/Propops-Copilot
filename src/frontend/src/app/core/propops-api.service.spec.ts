@@ -152,6 +152,38 @@ describe('PropOpsApiService', () => {
     note.flush({});
   });
 
+  it('posts resolution feedback and requests dataset endpoints', () => {
+    const service = TestBed.inject(PropOpsApiService);
+    const http = TestBed.inject(HttpTestingController);
+    const payload = {
+      finalResolution: 'Licensed plumber repaired the sink leak.',
+      correctedCategory: 'Plumbing' as const,
+      correctedPriority: 'High' as const,
+      finalTenantResponse: 'The leak has been repaired.',
+      dispatchOutcome: 'Completed' as const,
+      resolutionNotes: 'Tenant confirmed completion.',
+      excludeFromTraining: false,
+      exclusionReason: ''
+    };
+
+    service.submitResolutionFeedback('request-1', payload).subscribe();
+    service.getFineTuningCandidates().subscribe();
+    service.exportFineTuningDataset().subscribe();
+
+    const feedback = http.expectOne(`${apiBaseUrl}/maintenanceRequests/request-1/operations/resolution-feedback`);
+    expect(feedback.request.method).toBe('POST');
+    expect(feedback.request.body).toEqual(payload);
+    feedback.flush({});
+
+    const candidates = http.expectOne(`${apiBaseUrl}/learning/dataset/candidates`);
+    expect(candidates.request.method).toBe('GET');
+    candidates.flush([]);
+
+    const exportRequest = http.expectOne(`${apiBaseUrl}/learning/dataset/export`);
+    expect(exportRequest.request.method).toBe('GET');
+    exportRequest.flush({});
+  });
+
   it('posts email intake payloads to the API', () => {
     const service = TestBed.inject(PropOpsApiService);
     const http = TestBed.inject(HttpTestingController);

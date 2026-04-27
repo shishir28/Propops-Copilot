@@ -10,9 +10,12 @@ import {
   IngestSmsChatPayload,
   IntakeIngestionResult,
   IntakeSubmission,
+  FineTuningDatasetExport,
+  FineTuningExampleCandidate,
   MaintenanceOperationsDetail,
   MaintenanceRequest,
   MaintenanceTriageInferenceResult,
+  SubmitMaintenanceResolutionFeedbackPayload,
   SubmitMaintenanceTriageReviewPayload
 } from '../models/propops.models';
 
@@ -84,6 +87,24 @@ export class PropOpsApiService {
       `${this.apiBaseUrl}/maintenanceRequests/${maintenanceRequestId}/operations/actions/internal-note`,
       { note }
     );
+  }
+
+  submitResolutionFeedback(
+    maintenanceRequestId: string,
+    payload: SubmitMaintenanceResolutionFeedbackPayload
+  ): Observable<MaintenanceOperationsDetail> {
+    return this.http.post<MaintenanceOperationsDetail>(
+      `${this.apiBaseUrl}/maintenanceRequests/${maintenanceRequestId}/operations/resolution-feedback`,
+      payload
+    );
+  }
+
+  getFineTuningCandidates(): Observable<FineTuningExampleCandidate[]> {
+    return this.http.get<FineTuningExampleCandidate[]>(`${this.apiBaseUrl}/learning/dataset/candidates`);
+  }
+
+  exportFineTuningDataset(): Observable<FineTuningDatasetExport> {
+    return this.http.get<FineTuningDatasetExport>(`${this.apiBaseUrl}/learning/dataset/export`);
   }
 
   ingestEmail(payload: IngestEmailPayload): Observable<IntakeIngestionResult> {

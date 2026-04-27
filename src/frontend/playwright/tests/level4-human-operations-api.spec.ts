@@ -108,5 +108,40 @@ test.describe('Level 4 human-in-the-loop operations API', () => {
     expect(actionTypes).toContain('VendorAssigned');
     expect(actionTypes).toContain('TenantNotified');
     expect(actionTypes).toContain('InternalNoteLogged');
+
+    const feedbackResponse = await request.post(
+      `${apiBaseUrl}/api/maintenanceRequests/${createdRequest.id}/operations/resolution-feedback`,
+      {
+        headers: authHeaders(token),
+        data: {
+          finalResolution: 'Emergency plumber replaced the failed sink trap and confirmed the leak is resolved.',
+          correctedCategory: 'Plumbing',
+          correctedPriority: 'Emergency',
+          finalTenantResponse: 'The emergency plumber has repaired the leak and confirmed the area is safe.',
+          dispatchOutcome: 'Completed',
+          resolutionNotes: 'Tenant confirmed completion after vendor visit.',
+          excludeFromTraining: false,
+          exclusionReason: ''
+        }
+      }
+    );
+    expect(feedbackResponse.status()).toBe(200);
+    detail = await feedbackResponse.json();
+    expect(detail.latestFeedback.dispatchOutcome).toBe('Completed');
+    expect(detail.request.status).toBe('Completed');
+
+    const candidatesResponse = await request.get(`${apiBaseUrl}/api/learning/dataset/candidates`, {
+      headers: authHeaders(token)
+    });
+    expect(candidatesResponse.status()).toBe(200);
+    const candidates = await candidatesResponse.json();
+    expect(candidates.some((candidate: { maintenanceRequestId: string }) => candidate.maintenanceRequestId === createdRequest.id)).toBeTruthy();
+
+    const exportResponse = await request.get(`${apiBaseUrl}/api/learning/dataset/export`, {
+      headers: authHeaders(token)
+    });
+    expect(exportResponse.status()).toBe(200);
+    const exportBody = await exportResponse.json();
+    expect(exportBody.exampleCount).toBeGreaterThan(0);
   });
 });

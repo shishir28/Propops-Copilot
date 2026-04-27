@@ -250,3 +250,27 @@ Content-Type: application/json
 {
   "note": "Tenant prefers afternoon access."
 }
+
+### Level 5 - save resolution feedback and create dataset candidate
+POST {{baseUrl}}/api/maintenanceRequests/{{createManagerRequest.response.body.id}}/operations/resolution-feedback
+Authorization: Bearer {{managerLogin.response.body.accessToken}}
+Content-Type: application/json
+
+{
+  "finalResolution": "Licensed plumber repaired the leaking sink trap and confirmed the cabinet is dry.",
+  "correctedCategory": "Plumbing",
+  "correctedPriority": "High",
+  "finalTenantResponse": "The leak has been repaired and the plumber confirmed the area is safe.",
+  "dispatchOutcome": "Completed",
+  "resolutionNotes": "Tenant confirmed completion after the vendor visit.",
+  "excludeFromTraining": false,
+  "exclusionReason": ""
+}
+
+### Level 5 - list fine-tuning dataset candidates
+GET {{baseUrl}}/api/learning/dataset/candidates
+Authorization: Bearer {{managerLogin.response.body.accessToken}}
+
+### Level 5 - export fine-tuning dataset JSONL
+GET {{baseUrl}}/api/learning/dataset/export
+Authorization: Bearer {{managerLogin.response.body.accessToken}}
