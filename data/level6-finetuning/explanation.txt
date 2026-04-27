@@ -1,0 +1,29 @@
+File explanation:
+
+#1. level5-candidates.raw.json: This is the audit/export file.
+
+    It contains the filtered candidate records from the app before conversion. It is useful for debugging where the training rows came from.
+
+#2. all.chat.jsonl 
+    This is the full converted dataset in chat format.Use it when you want to inspect the entire dataset or later create a different split.
+
+#3. train.chat.jsonl
+    Actual training file. This is what LoRA/QLoRA training will use as the main dataset.
+
+#4. eval.chat.jsonl
+
+    This is the holdout evaluation file.
+
+#5. manifest.json
+    This is the dataset summary.It records counts and conversion assumptions.
+
+
+PropOps feedback/review data
+        ↓
+export_level6_finetune_dataset.py
+        ↓
+level5-candidates.raw.json       audit/debug
+all.chat.jsonl                   full converted dataset
+train.chat.jsonl                 used by LoRA training
+eval.chat.jsonl                  used for before/after comparison
+manifest.json                    dataset summary

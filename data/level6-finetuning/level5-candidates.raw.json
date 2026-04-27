@@ -1,0 +1,238 @@
+{
+  "allCandidateRows": 30,
+  "usableCandidateRows": 25,
+  "dedupedCandidateRows": 21,
+  "candidates": [
+    {
+      "id": "021e1149-5a8e-4a44-ba38-d98847a2d6d2",
+      "maintenanceRequestId": "99933a53-f00f-48c5-a943-6b17787d329f",
+      "maintenanceResolutionFeedbackId": "06265181-182a-41c6-98f7-212eb8f1c806",
+      "status": "Candidate",
+      "inputSnapshotJson": "{\"channel\": \"Portal\", \"request_id\": \"99933a53-f00f-48c5-a943-6b17787d329f\", \"unit_number\": \"22A\", \"category_hint\": \"Plumbing\", \"priority_hint\": \"Normal\", \"property_name\": \"Harbour View Residences\", \"normalized_text\": \"Bathroom tap is leaking constantly and water is pooling near the vanity. Ref 1777254620127.\", \"reference_number\": \"MR-20260427015020-634D895\", \"submitted_at_utc\": \"2026-04-27T01:50:20.243404+00:00\"}",
+      "outputSnapshotJson": "{\"category\": \"Plumbing\", \"priority\": \"High\", \"vendor_type\": \"Licensed Plumber\", \"internal_summary\": \"Licensed plumber repaired the leaking sink trap.\", \"dispatch_decision\": \"Route to staff triage review before dispatch.\", \"tenant_response_draft\": \"The leak has been repaired and the plumber confirmed the area is safe\"}",
+      "metadataSnapshotJson": "{\"review_id\": \"d376a1a7-cf31-42ab-b830-86a0e41290ba\", \"feedback_id\": \"06265181-182a-41c6-98f7-212eb8f1c806\", \"action_count\": 4, \"review_status\": \"Approved\", \"generated_from\": \"level5-feedback\", \"dispatch_outcome\": \"Completed\", \"source_request_id\": \"99933a53-f00f-48c5-a943-6b17787d329f\"}",
+      "exclusionReason": "",
+      "createdAtUtc": "2026-04-27T01:54:57.525117+00:00"
+    },
+    {
+      "id": "ce5d2a92-81aa-482a-8e10-da90b696cfc2",
+      "maintenanceRequestId": "03168828-32f5-4fd7-85e9-44594bc953c1",
+      "maintenanceResolutionFeedbackId": "ec513bf3-32c2-49c3-992e-64d49876d185",
+      "status": "Candidate",
+      "inputSnapshotJson": "{\"channel\": \"Email\", \"request_id\": \"03168828-32f5-4fd7-85e9-44594bc953c1\", \"unit_number\": \"3\", \"category_hint\": \"Plumbing\", \"priority_hint\": \"High\", \"property_name\": \"Maple Court\", \"normalized_text\": \"Water is dripping through the ceiling below the upstairs bathroom.\", \"reference_number\": \"MR-20260427043646-2ADDAF6\", \"submitted_at_utc\": \"2026-04-27T04:36:46.064361+00:00\"}",
+      "outputSnapshotJson": "{\"category\": \"Plumbing\", \"priority\": \"High\", \"vendor_type\": \"Licensed Plumber\", \"internal_summary\": \"It has been done\", \"dispatch_decision\": \"Dispatch a licensed plumber to address the leaking issue in apartment 3 at Maple Court immediately.\", \"tenant_response_draft\": \"Dear Resident,\\n\\nWe have received your report of water dripping through the ceiling in the upstairs bathroom. A licensed plumber will be dispatched to resolve this issue as soon as possible. Please do not attempt to fix the leak yourself.\\n\\nSincerely,\\nThe Property Management Team\"}",
+      "metadataSnapshotJson": "{\"review_id\": \"018951b2-c73e-4093-8199-1557867442de\", \"feedback_id\": \"ec513bf3-32c2-49c3-992e-64d49876d185\", \"action_count\": 4, \"review_status\": \"Approved\", \"generated_from\": \"level5-feedback\", \"dispatch_outcome\": \"Completed\", \"source_request_id\": \"03168828-32f5-4fd7-85e9-44594bc953c1\"}",
+      "exclusionReason": "",
+      "createdAtUtc": "2026-04-27T04:41:20.554174+00:00"
+    },
+    {
+      "id": "8401422b-4663-49ce-b515-a41e07612133",
+      "maintenanceRequestId": "6a276d05-f1b4-4322-8eec-0c4efd161c23",
+      "maintenanceResolutionFeedbackId": "b3722ae6-f506-42d5-85a5-7ca31146fcce",
+      "status": "Candidate",
+      "inputSnapshotJson": "{\"channel\": \"Portal\", \"request_id\": \"6a276d05-f1b4-4322-8eec-0c4efd161c23\", \"unit_number\": \"11E\", \"category_hint\": \"Security\", \"priority_hint\": \"Normal\", \"property_name\": \"Harbour View Apartments\", \"normalized_text\": \"The internal bedroom door handle is loose and sometimes sticks.\", \"reference_number\": \"MR-20260427043646-E200F70\", \"submitted_at_utc\": \"2026-04-27T04:36:46.042387+00:00\"}",
+      "outputSnapshotJson": "{\"category\": \"Security\", \"priority\": \"Normal\", \"vendor_type\": \"Locksmith\", \"internal_summary\": \"The internal bedroom door handle is loose is resolved with help of carpenter.\", \"dispatch_decision\": \"Dispatch locksmith immediately to address the loose and sticking bedroom door handle in unit 11E at Harbour View Apartments.\", \"tenant_response_draft\": \"Dear Resident,\\n\\nWe have received your request regarding the loose and sometimes sticking bedroom door handle. Our team will be dispatched to secure and repair the issue as soon as possible.\\n\\nBest regards,\\n[Your Name]\"}",
+      "metadataSnapshotJson": "{\"review_id\": \"d8a728e0-5ca3-42ae-9bec-5fefd1597d72\", \"feedback_id\": \"b3722ae6-f506-42d5-85a5-7ca31146fcce\", \"action_count\": 4, \"review_status\": \"Approved\", \"generated_from\": \"level5-feedback\", \"dispatch_outcome\": \"Completed\", \"source_request_id\": \"6a276d05-f1b4-4322-8eec-0c4efd161c23\"}",
+      "exclusionReason": "",
+      "createdAtUtc": "2026-04-27T04:42:24.834768+00:00"
+    },
+    {
+      "id": "c8b3c465-df48-478c-99cd-e1cafe3e038a",
+      "maintenanceRequestId": "57c4a88a-1d69-4fbe-bdbd-7643e1141697",
+      "maintenanceResolutionFeedbackId": "237ef5ea-c4a8-48f0-b8ed-f54afc1ad110",
+      "status": "Candidate",
+      "inputSnapshotJson": "{\"channel\": \"PhoneNote\", \"request_id\": \"57c4a88a-1d69-4fbe-bdbd-7643e1141697\", \"unit_number\": \"1\", \"category_hint\": \"Electrical\", \"priority_hint\": \"Emergency\", \"property_name\": \"Maple Court\", \"normalized_text\": \"There is a burning smell from the switchboard.\", \"reference_number\": \"MR-20260427043646-BDE8680\", \"submitted_at_utc\": \"2026-04-27T04:36:46.019471+00:00\"}",
+      "outputSnapshotJson": "{\"category\": \"Electrical\", \"priority\": \"Emergency\", \"vendor_type\": \"Licensed Electrician\", \"internal_summary\": \"An electrician has attended the  the case and  reported problem is resolved.\", \"dispatch_decision\": \"Dispatch a licensed electrician immediately to address the burning smell from the switchboard at Maple Court unit 1.\", \"tenant_response_draft\": \"We have received your report about a burning smell from the switchboard. A licensed electrician will be dispatched immediately to check and fix the issue.\"}",
+      "metadataSnapshotJson": "{\"review_id\": \"c377c4aa-e21b-4360-ab3d-f90745d6fa2d\", \"feedback_id\": \"237ef5ea-c4a8-48f0-b8ed-f54afc1ad110\", \"action_count\": 4, \"review_status\": \"Approved\", \"generated_from\": \"level5-feedback\", \"dispatch_outcome\": \"Completed\", \"source_request_id\": \"57c4a88a-1d69-4fbe-bdbd-7643e1141697\"}",
+      "exclusionReason": "",
+      "createdAtUtc": "2026-04-27T04:44:01.48126+00:00"
+    },
+    {
+      "id": "78d0d230-54e8-492f-99a2-312d1cb9e3e7",
+      "maintenanceRequestId": "bb8d0c28-b49e-40eb-a6e0-beb24d2ac03d",
+      "maintenanceResolutionFeedbackId": "10b6d184-8fb8-4bdf-b7f5-ac5c2406618a",
+      "status": "Candidate",
+      "inputSnapshotJson": "{\"channel\": \"Portal\", \"request_id\": \"bb8d0c28-b49e-40eb-a6e0-beb24d2ac03d\", \"unit_number\": \"6D\", \"category_hint\": \"Appliances\", \"priority_hint\": \"Low\", \"property_name\": \"Harbour View Apartments\", \"normalized_text\": \"The oven light is not working but the oven still heats normally.\", \"reference_number\": \"MR-20260427043646-D5E4130\", \"submitted_at_utc\": \"2026-04-27T04:36:46.006617+00:00\"}",
+      "outputSnapshotJson": "{\"category\": \"Appliances\", \"priority\": \"Low\", \"vendor_type\": \"Short Contractor/Vendor Type\", \"internal_summary\": \"The oven light case was schedule with normal priority and addressed .\", \"dispatch_decision\": \"Dispatch an appliance care vendor to address the oven light issue.\", \"tenant_response_draft\": \"Your oven light is not working, but the oven itself is functioning properly. We have scheduled a repair for you shortly.\"}",
+      "metadataSnapshotJson": "{\"review_id\": \"f3f1d950-2d04-4860-b01a-d0f4c07b1d5e\", \"feedback_id\": \"10b6d184-8fb8-4bdf-b7f5-ac5c2406618a\", \"action_count\": 4, \"review_status\": \"Approved\", \"generated_from\": \"level5-feedback\", \"dispatch_outcome\": \"Completed\", \"source_request_id\": \"bb8d0c28-b49e-40eb-a6e0-beb24d2ac03d\"}",
+      "exclusionReason": "",
+      "createdAtUtc": "2026-04-27T04:45:27.020982+00:00"
+    },
+    {
+      "id": "28ecaac7-5e54-43f0-b354-2f968c6ecf5b",
+      "maintenanceRequestId": "a4290b4e-5fa2-4cfa-abff-88157e2ebbd1",
+      "maintenanceResolutionFeedbackId": "ddbfd071-de6c-42b5-acde-1d40f34f059e",
+      "status": "Candidate",
+      "inputSnapshotJson": "{\"channel\": \"Email\", \"request_id\": \"a4290b4e-5fa2-4cfa-abff-88157e2ebbd1\", \"unit_number\": \"16\", \"category_hint\": \"HVAC\", \"priority_hint\": \"High\", \"property_name\": \"Maple Court\", \"normalized_text\": \"The heating has failed during winter and the unit is very cold.\", \"reference_number\": \"MR-20260427043645-B4E0277\", \"submitted_at_utc\": \"2026-04-27T04:36:45.993616+00:00\"}",
+      "outputSnapshotJson": "{\"category\": \"HVAC\", \"priority\": \"High\", \"vendor_type\": \"Preferred HVAC Contractor\", \"internal_summary\": \"high-priority HVAC was handled with emergency flag and solved\", \"dispatch_decision\": \"Dispatch the preferred HVAC contractor immediately to address the heating failure at Unit 16 in Maple Court.\", \"tenant_response_draft\": \"Dear Resident,\\n\\nWe are currently experiencing an issue with the heating system in your unit. Our team is working on resolving this as soon as possible. Thank you for your patience.\\n\\nBest regards,\\n[Your Name]\"}",
+      "metadataSnapshotJson": "{\"review_id\": \"0ddcefdf-86d5-4c7d-94bd-f74b896735af\", \"feedback_id\": \"ddbfd071-de6c-42b5-acde-1d40f34f059e\", \"action_count\": 4, \"review_status\": \"Approved\", \"generated_from\": \"level5-feedback\", \"dispatch_outcome\": \"Completed\", \"source_request_id\": \"a4290b4e-5fa2-4cfa-abff-88157e2ebbd1\"}",
+      "exclusionReason": "",
+      "createdAtUtc": "2026-04-27T04:46:36.450226+00:00"
+    },
+    {
+      "id": "b474ab54-d175-4da1-a979-cc1e07116169",
+      "maintenanceRequestId": "a2817ecf-6c34-43e9-bf8e-9fef90731f4b",
+      "maintenanceResolutionFeedbackId": "27687c2f-4820-451e-8413-1f604f412c92",
+      "status": "Candidate",
+      "inputSnapshotJson": "{\"channel\": \"PhoneNote\", \"request_id\": \"a2817ecf-6c34-43e9-bf8e-9fef90731f4b\", \"unit_number\": \"2A\", \"category_hint\": \"Plumbing\", \"priority_hint\": \"Emergency\", \"property_name\": \"Harbour View Apartments\", \"normalized_text\": \"Sewage is backing up through the toilet and bathroom drain.\", \"reference_number\": \"MR-20260427043645-1B3E2C2\", \"submitted_at_utc\": \"2026-04-27T04:36:45.982002+00:00\"}",
+      "outputSnapshotJson": "{\"category\": \"Plumbing\", \"priority\": \"Emergency\", \"vendor_type\": \"Licensed Plumber\", \"internal_summary\": \"Immediate actions were take to take care of  sewage backup in unit 2A.\", \"dispatch_decision\": \"Dispatch a licensed plumber immediately for the reported issue.\", \"tenant_response_draft\": \"Dear Resident,\\n\\nWe have received your report of sewage backing up through the toilet and bathroom drain. We are taking immediate steps to resolve this issue. A licensed plumber will be dispatched to address the problem as soon as possible.\\n\\nThank you for your patience and understanding.\"}",
+      "metadataSnapshotJson": "{\"review_id\": \"56c16f78-677b-4424-ad01-890b6e0cef67\", \"feedback_id\": \"27687c2f-4820-451e-8413-1f604f412c92\", \"action_count\": 5, \"review_status\": \"Approved\", \"generated_from\": \"level5-feedback\", \"dispatch_outcome\": \"Completed\", \"source_request_id\": \"a2817ecf-6c34-43e9-bf8e-9fef90731f4b\"}",
+      "exclusionReason": "",
+      "createdAtUtc": "2026-04-27T04:48:02.895387+00:00"
+    },
+    {
+      "id": "df7029e3-aab8-491c-8814-2c24e4cd7d9f",
+      "maintenanceRequestId": "4826daad-cb77-4ca1-ba13-526190184b41",
+      "maintenanceResolutionFeedbackId": "6ebe2000-7e38-43f1-8104-51a001bf09ae",
+      "status": "Candidate",
+      "inputSnapshotJson": "{\"channel\": \"Email\", \"request_id\": \"4826daad-cb77-4ca1-ba13-526190184b41\", \"unit_number\": \"12B\", \"category_hint\": \"Plumbing\", \"priority_hint\": \"Normal\", \"property_name\": \"Harbour View Apartments\", \"normalized_text\": \"Water is leaking heavily from under the kitchen sink and spreading across the cabinet floor\", \"reference_number\": \"MR-20260427042930-4799292\", \"submitted_at_utc\": \"2026-04-27T04:29:30.512415+00:00\"}",
+      "outputSnapshotJson": "{\"category\": \"Plumbing\", \"priority\": \"High\", \"vendor_type\": \"Licensed plumber\", \"internal_summary\": \"Licensed plumber repaired the active under-sink leak and confirmed the cabinet area was checked for water damage.\", \"dispatch_decision\": \"Dispatch to the General Maintenance Team for immediate assessment and repair.\", \"tenant_response_draft\": \"Thanks for reporting this. We are arranging a plumber as soon as possible. Please avoid using the sink if safe.\"}",
+      "metadataSnapshotJson": "{\"review_id\": \"55bc38a6-3336-4d6a-98e2-41a225544046\", \"feedback_id\": \"6ebe2000-7e38-43f1-8104-51a001bf09ae\", \"action_count\": 4, \"review_status\": \"Edited\", \"generated_from\": \"level5-feedback\", \"dispatch_outcome\": \"Completed\", \"source_request_id\": \"4826daad-cb77-4ca1-ba13-526190184b41\"}",
+      "exclusionReason": "",
+      "createdAtUtc": "2026-04-27T05:03:13.653195+00:00"
+    },
+    {
+      "id": "756979a2-66cd-49c0-a3c8-0e3c075c1d75",
+      "maintenanceRequestId": "d0880337-612a-48dc-b66a-26ef390d2124",
+      "maintenanceResolutionFeedbackId": "c3044773-4aaf-449d-a42b-dfc1c1b9a072",
+      "status": "Candidate",
+      "inputSnapshotJson": "{\"channel\": \"Email\", \"request_id\": \"d0880337-612a-48dc-b66a-26ef390d2124\", \"unit_number\": \"4A\", \"category_hint\": \"Plumbing\", \"priority_hint\": \"Emergency\", \"property_name\": \"Harbour View Apartments\", \"normalized_text\": \"A pipe has burst in the bathroom and water is flooding into the hallway.\", \"reference_number\": \"MR-20260427043044-2E351B8\", \"submitted_at_utc\": \"2026-04-27T04:30:44.70409+00:00\"}",
+      "outputSnapshotJson": "{\"category\": \"Plumbing\", \"priority\": \"Emergency\", \"vendor_type\": \"Emergency plumber\", \"internal_summary\": \"Emergency plumber isolated the burst pipe, stopped the flooding, and arranged follow-up drying checks.\", \"dispatch_decision\": \"Dispatch a licensed plumber immediately.\", \"tenant_response_draft\": \"This has been escalated for immediate attention. Please shut off water if safe and keep clear of flooded areas.\"}",
+      "metadataSnapshotJson": "{\"review_id\": \"7defbdd6-31e4-40f4-8e46-3e52bb0ed94c\", \"feedback_id\": \"c3044773-4aaf-449d-a42b-dfc1c1b9a072\", \"action_count\": 4, \"review_status\": \"Edited\", \"generated_from\": \"level5-feedback\", \"dispatch_outcome\": \"Completed\", \"source_request_id\": \"d0880337-612a-48dc-b66a-26ef390d2124\"}",
+      "exclusionReason": "",
+      "createdAtUtc": "2026-04-27T05:03:18.899012+00:00"
+    },
+    {
+      "id": "8be3c0f1-993c-4c8d-8890-b0998fafeae8",
+      "maintenanceRequestId": "f0ed47c5-8769-439a-b242-89d740c6ec2b",
+      "maintenanceResolutionFeedbackId": "cad25a5b-09a9-4da0-943d-a815ba5497d4",
+      "status": "Candidate",
+      "inputSnapshotJson": "{\"channel\": \"SmsChat\", \"request_id\": \"f0ed47c5-8769-439a-b242-89d740c6ec2b\", \"unit_number\": null, \"category_hint\": \"Plumbing\", \"priority_hint\": \"Normal\", \"property_name\": \"Maple Court\", \"normalized_text\": \"The bathroom tap keeps dripping even when fully turned off.\", \"reference_number\": \"MR-20260427043122-792D0FB\", \"submitted_at_utc\": \"2026-04-27T04:31:22.775264+00:00\"}",
+      "outputSnapshotJson": "{\"category\": \"Plumbing\", \"priority\": \"Normal\", \"vendor_type\": \"Licensed plumber\", \"internal_summary\": \"Plumber repaired the dripping bathroom tap and confirmed it shuts off correctly.\", \"dispatch_decision\": \"Dispatch a licensed plumber to address the dripping bathroom tap at Maple Court.\", \"tenant_response_draft\": \"We have logged this and will arrange maintenance to inspect and repair the dripping tap.\"}",
+      "metadataSnapshotJson": "{\"review_id\": \"4cad5dd8-77e4-4434-8dbf-d2fc526a81b0\", \"feedback_id\": \"cad25a5b-09a9-4da0-943d-a815ba5497d4\", \"action_count\": 4, \"review_status\": \"Edited\", \"generated_from\": \"level5-feedback\", \"dispatch_outcome\": \"Completed\", \"source_request_id\": \"f0ed47c5-8769-439a-b242-89d740c6ec2b\"}",
+      "exclusionReason": "",
+      "createdAtUtc": "2026-04-27T05:03:23.023125+00:00"
+    },
+    {
+      "id": "791714be-174c-4432-b03d-6d45e8d34410",
+      "maintenanceRequestId": "50170f4d-34de-4a93-a352-b0095a788282",
+      "maintenanceResolutionFeedbackId": "49b7b968-b6f3-4622-b731-8a734bb61433",
+      "status": "Candidate",
+      "inputSnapshotJson": "{\"channel\": \"Portal\", \"request_id\": \"50170f4d-34de-4a93-a352-b0095a788282\", \"unit_number\": \"2C\", \"category_hint\": \"Electrical\", \"priority_hint\": \"Emergency\", \"property_name\": \"Maple Court\", \"normalized_text\": \"There are sparks coming from the power outlet near the washing machine.\", \"reference_number\": \"MR-20260427043212-FB0B262\", \"submitted_at_utc\": \"2026-04-27T04:32:12.203554+00:00\"}",
+      "outputSnapshotJson": "{\"category\": \"Electrical\", \"priority\": \"Emergency\", \"vendor_type\": \"Licensed electrician\", \"internal_summary\": \"Electrician isolated the sparking outlet, made the area safe, and completed the urgent repair.\", \"dispatch_decision\": \"Dispatch a licensed electrician immediately for inspection and repair.\", \"tenant_response_draft\": \"Please stay away from the outlet. We are escalating this for urgent electrical attendance.\"}",
+      "metadataSnapshotJson": "{\"review_id\": \"69919b97-5d58-4b73-a7f4-0dd20caa87de\", \"feedback_id\": \"49b7b968-b6f3-4622-b731-8a734bb61433\", \"action_count\": 4, \"review_status\": \"Edited\", \"generated_from\": \"level5-feedback\", \"dispatch_outcome\": \"Completed\", \"source_request_id\": \"50170f4d-34de-4a93-a352-b0095a788282\"}",
+      "exclusionReason": "",
+      "createdAtUtc": "2026-04-27T05:03:27.514137+00:00"
+    },
+    {
+      "id": "c5f04f87-7c3c-4d07-8c10-2cd0683d00b6",
+      "maintenanceRequestId": "207c0c23-6a06-45fd-a7d7-ea88e82bc751",
+      "maintenanceResolutionFeedbackId": "61487cf1-0c8c-4615-95fc-908a409ee9cc",
+      "status": "Candidate",
+      "inputSnapshotJson": "{\"channel\": \"Portal\", \"request_id\": \"207c0c23-6a06-45fd-a7d7-ea88e82bc751\", \"unit_number\": \"(D\", \"category_hint\": \"Electrical\", \"priority_hint\": \"High\", \"property_name\": \"Harbour View Apartments\", \"normalized_text\": \"Half the apartment has lost power but the neighboring units still have electricity.\", \"reference_number\": \"MR-20260427043248-789090F\", \"submitted_at_utc\": \"2026-04-27T04:32:48.420294+00:00\"}",
+      "outputSnapshotJson": "{\"category\": \"Electrical\", \"priority\": \"High\", \"vendor_type\": \"Licensed electrician\", \"internal_summary\": \"Electrician restored power to the affected circuit and confirmed neighboring supply was unaffected.\", \"dispatch_decision\": \"Dispatch a licensed electrician immediately to assess and repair the power outage in unit D.\", \"tenant_response_draft\": \"We will arrange an electrician to inspect the partial power outage and confirm the next action.\"}",
+      "metadataSnapshotJson": "{\"review_id\": \"670c5b85-9440-41e4-b06e-8a4d47e5bc87\", \"feedback_id\": \"61487cf1-0c8c-4615-95fc-908a409ee9cc\", \"action_count\": 4, \"review_status\": \"Edited\", \"generated_from\": \"level5-feedback\", \"dispatch_outcome\": \"Completed\", \"source_request_id\": \"207c0c23-6a06-45fd-a7d7-ea88e82bc751\"}",
+      "exclusionReason": "",
+      "createdAtUtc": "2026-04-27T05:03:33.462826+00:00"
+    },
+    {
+      "id": "73b3f881-6bf1-4e2a-a18e-16464c8236f3",
+      "maintenanceRequestId": "43c46ad6-2674-4113-a9cd-fa32557b335b",
+      "maintenanceResolutionFeedbackId": "5841bf59-174d-4d0f-b4b8-dd528a80db5a",
+      "status": "Candidate",
+      "inputSnapshotJson": "{\"channel\": \"PhoneNote\", \"request_id\": \"43c46ad6-2674-4113-a9cd-fa32557b335b\", \"unit_number\": null, \"category_hint\": \"Electrical\", \"priority_hint\": \"Normal\", \"property_name\": \"Maple Court\", \"normalized_text\": \"The ceiling light in the bedroom does not turn on after changing the bulb.\", \"reference_number\": \"MR-20260427043329-423C9BF\", \"submitted_at_utc\": \"2026-04-27T04:33:29.979506+00:00\"}",
+      "outputSnapshotJson": "{\"category\": \"Electrical\", \"priority\": \"Normal\", \"vendor_type\": \"Electrician\", \"internal_summary\": \"Electrician repaired the bedroom ceiling light fault and confirmed the fitting works normally.\", \"dispatch_decision\": \"Dispatch a licensed electrician to check the ceiling light in the bedroom at Maple Court.\", \"tenant_response_draft\": \"We have logged the lighting issue for maintenance review and will arrange inspection.\"}",
+      "metadataSnapshotJson": "{\"review_id\": \"37d75918-f4dd-4314-b6a9-3883c2ba79c0\", \"feedback_id\": \"5841bf59-174d-4d0f-b4b8-dd528a80db5a\", \"action_count\": 4, \"review_status\": \"Edited\", \"generated_from\": \"level5-feedback\", \"dispatch_outcome\": \"Completed\", \"source_request_id\": \"43c46ad6-2674-4113-a9cd-fa32557b335b\"}",
+      "exclusionReason": "",
+      "createdAtUtc": "2026-04-27T05:03:39.194849+00:00"
+    },
+    {
+      "id": "1d07b7a1-077f-4a01-b6d6-afd557d7e024",
+      "maintenanceRequestId": "6526fd5c-bb70-4690-8a39-8757cd6a7bcd",
+      "maintenanceResolutionFeedbackId": "f2c97c72-f545-445a-97f7-fe7c3a724cf1",
+      "status": "Candidate",
+      "inputSnapshotJson": "{\"channel\": \"SmsChat\", \"request_id\": \"6526fd5c-bb70-4690-8a39-8757cd6a7bcd\", \"unit_number\": \"3F\", \"category_hint\": \"Appliances\", \"priority_hint\": \"High\", \"property_name\": \"Harbour View Apartments\", \"normalized_text\": \"The fridge has stopped working and food is starting to spoil.\", \"reference_number\": \"MR-20260427043645-8BD4B38\", \"submitted_at_utc\": \"2026-04-27T04:36:45.870843+00:00\"}",
+      "outputSnapshotJson": "{\"category\": \"Appliances\", \"priority\": \"High\", \"vendor_type\": \"Appliance technician\", \"internal_summary\": \"Appliance technician attended the failed fridge, restored cooling, and advised the tenant on safe food disposal.\", \"dispatch_decision\": \"Dispatch appliance technician immediately to address the malfunctioning refrigerator at Unit 3F in Harbour View Apartments.\", \"tenant_response_draft\": \"We will prioritize this because the fridge is not working and food may spoil.\"}",
+      "metadataSnapshotJson": "{\"review_id\": \"cbc6dd8b-6a19-4570-ae9e-ff8448254254\", \"feedback_id\": \"f2c97c72-f545-445a-97f7-fe7c3a724cf1\", \"action_count\": 4, \"review_status\": \"Edited\", \"generated_from\": \"level5-feedback\", \"dispatch_outcome\": \"Completed\", \"source_request_id\": \"6526fd5c-bb70-4690-8a39-8757cd6a7bcd\"}",
+      "exclusionReason": "",
+      "createdAtUtc": "2026-04-27T05:03:45.74983+00:00"
+    },
+    {
+      "id": "ea34c048-fd63-4cdf-88d3-72652c00b2b9",
+      "maintenanceRequestId": "2002b17d-abce-4301-95a3-6e63b9a7af62",
+      "maintenanceResolutionFeedbackId": "19862d66-e133-47a4-a607-388a1f0bc524",
+      "status": "Candidate",
+      "inputSnapshotJson": "{\"channel\": \"Portal\", \"request_id\": \"2002b17d-abce-4301-95a3-6e63b9a7af62\", \"unit_number\": \"5A\", \"category_hint\": \"Appliances\", \"priority_hint\": \"Normal\", \"property_name\": \"Maple Court\", \"normalized_text\": \"The dishwasher completes the cycle but leaves standing water at the bottom.\", \"reference_number\": \"MR-20260427043645-9B7F56A\", \"submitted_at_utc\": \"2026-04-27T04:36:45.883645+00:00\"}",
+      "outputSnapshotJson": "{\"category\": \"Appliances\", \"priority\": \"Normal\", \"vendor_type\": \"Appliance technician\", \"internal_summary\": \"Appliance technician cleared the dishwasher drainage fault and confirmed the cycle now drains correctly.\", \"dispatch_decision\": \"Dispatch an appliance care vendor to address the standing water issue in the dishwasher.\", \"tenant_response_draft\": \"We have logged the dishwasher issue and will arrange an appliance technician to inspect it.\"}",
+      "metadataSnapshotJson": "{\"review_id\": \"27a7fcb1-71fa-4c85-8b9a-4514a237b324\", \"feedback_id\": \"19862d66-e133-47a4-a607-388a1f0bc524\", \"action_count\": 4, \"review_status\": \"Edited\", \"generated_from\": \"level5-feedback\", \"dispatch_outcome\": \"Completed\", \"source_request_id\": \"2002b17d-abce-4301-95a3-6e63b9a7af62\"}",
+      "exclusionReason": "",
+      "createdAtUtc": "2026-04-27T05:03:52.026527+00:00"
+    },
+    {
+      "id": "3d206f9d-23bc-4993-a3f4-3a6ff4366866",
+      "maintenanceRequestId": "9dfcf672-09bd-4b51-8abb-74748279b4a8",
+      "maintenanceResolutionFeedbackId": "212cccd6-9439-400e-b456-7ae62ac0dd0c",
+      "status": "Candidate",
+      "inputSnapshotJson": "{\"channel\": \"PhoneNote\", \"request_id\": \"9dfcf672-09bd-4b51-8abb-74748279b4a8\", \"unit_number\": \"7C\", \"category_hint\": \"Security\", \"priority_hint\": \"Emergency\", \"property_name\": \"Harbour View Apartments\", \"normalized_text\": \"The front door lock is broken and the apartment cannot be secured.\", \"reference_number\": \"MR-20260427043645-B5508BC\", \"submitted_at_utc\": \"2026-04-27T04:36:45.898665+00:00\"}",
+      "outputSnapshotJson": "{\"category\": \"Security\", \"priority\": \"Emergency\", \"vendor_type\": \"Locksmith\", \"internal_summary\": \"Locksmith repaired the front door lock and confirmed the apartment could be secured.\", \"dispatch_decision\": \"Dispatch locksmith immediately to secure the front door.\", \"tenant_response_draft\": \"We are escalating this urgently so the apartment can be secured.\"}",
+      "metadataSnapshotJson": "{\"review_id\": \"4559be5f-594f-405f-8b22-7d08e04a5065\", \"feedback_id\": \"212cccd6-9439-400e-b456-7ae62ac0dd0c\", \"action_count\": 4, \"review_status\": \"Edited\", \"generated_from\": \"level5-feedback\", \"dispatch_outcome\": \"Completed\", \"source_request_id\": \"9dfcf672-09bd-4b51-8abb-74748279b4a8\"}",
+      "exclusionReason": "",
+      "createdAtUtc": "2026-04-27T05:03:55.915533+00:00"
+    },
+    {
+      "id": "69353095-2b5c-4d1e-a84b-5bedbe8f21fb",
+      "maintenanceRequestId": "52aa6341-680a-4fa6-85f4-392f3d4f317d",
+      "maintenanceResolutionFeedbackId": "9e9eb8aa-1327-4c41-a380-8a24a7beb591",
+      "status": "Candidate",
+      "inputSnapshotJson": "{\"channel\": \"Portal\", \"request_id\": \"52aa6341-680a-4fa6-85f4-392f3d4f317d\", \"unit_number\": \"1B\", \"category_hint\": \"General\", \"priority_hint\": \"Low\", \"property_name\": \"Harbour View Apartments\", \"normalized_text\": \"There is a small paint chip on the hallway wall near the bedroom.\", \"reference_number\": \"MR-20260427043645-7905F4B\", \"submitted_at_utc\": \"2026-04-27T04:36:45.942023+00:00\"}",
+      "outputSnapshotJson": "{\"category\": \"General\", \"priority\": \"Low\", \"vendor_type\": \"General maintenance\", \"internal_summary\": \"General maintenance touched up the small hallway paint chip during routine works.\", \"dispatch_decision\": \"Dispatch to the General Maintenance Team for immediate attention.\", \"tenant_response_draft\": \"We have logged this for routine maintenance review.\"}",
+      "metadataSnapshotJson": "{\"review_id\": \"6c1eec26-8fa7-4d98-852b-8aba2a508867\", \"feedback_id\": \"9e9eb8aa-1327-4c41-a380-8a24a7beb591\", \"action_count\": 7, \"review_status\": \"Edited\", \"generated_from\": \"level5-feedback\", \"dispatch_outcome\": \"Completed\", \"source_request_id\": \"52aa6341-680a-4fa6-85f4-392f3d4f317d\"}",
+      "exclusionReason": "",
+      "createdAtUtc": "2026-04-27T05:04:01.698717+00:00"
+    },
+    {
+      "id": "4f68dcb6-3691-4054-8e4e-2a9d34e68e37",
+      "maintenanceRequestId": "e494cefa-191b-49df-a8a9-85768987d05f",
+      "maintenanceResolutionFeedbackId": "6846b8b6-727f-44e8-8c50-8d0fd88079be",
+      "status": "Candidate",
+      "inputSnapshotJson": "{\"channel\": \"SmsChat\", \"request_id\": \"e494cefa-191b-49df-a8a9-85768987d05f\", \"unit_number\": \"15A\", \"category_hint\": \"HVAC\", \"priority_hint\": \"Normal\", \"property_name\": \"Harbour View Apartments\", \"normalized_text\": \"The air conditioning has stopped cooling and the apartment is extremely hot.\", \"reference_number\": \"MR-20260427043535-88286E4\", \"submitted_at_utc\": \"2026-04-27T04:35:35.368416+00:00\"}",
+      "outputSnapshotJson": "{\"category\": \"HVAC\", \"priority\": \"High\", \"vendor_type\": \"HVAC technician\", \"internal_summary\": \"HVAC technician restored cooling and confirmed the system is operating normally.\", \"dispatch_decision\": \"Dispatch HVAC technician to address the air conditioning issue at Unit 15A in Harbour View Apartments.\", \"tenant_response_draft\": \"We will arrange an HVAC technician to inspect the air conditioning as a priority.\"}",
+      "metadataSnapshotJson": "{\"review_id\": \"f7e18361-9ece-44a0-bba5-24366f884710\", \"feedback_id\": \"6846b8b6-727f-44e8-8c50-8d0fd88079be\", \"action_count\": 4, \"review_status\": \"Edited\", \"generated_from\": \"level5-feedback\", \"dispatch_outcome\": \"Completed\", \"source_request_id\": \"e494cefa-191b-49df-a8a9-85768987d05f\"}",
+      "exclusionReason": "",
+      "createdAtUtc": "2026-04-27T05:06:24.503039+00:00"
+    },
+    {
+      "id": "6f7f09ee-8a51-4b1d-9ad8-592f944a4125",
+      "maintenanceRequestId": "11fc2cb1-5251-488a-a31f-8df1e32575d3",
+      "maintenanceResolutionFeedbackId": "eb63cd44-9ad3-4038-9abb-2c1173c9008e",
+      "status": "Candidate",
+      "inputSnapshotJson": "{\"channel\": \"Email\", \"request_id\": \"11fc2cb1-5251-488a-a31f-8df1e32575d3\", \"unit_number\": \"11\", \"category_hint\": \"HVAC\", \"priority_hint\": \"Normal\", \"property_name\": \"Maple Court\", \"normalized_text\": \"turns on but only blows cool air.\", \"reference_number\": \"MR-20260427043407-B9272CC\", \"submitted_at_utc\": \"2026-04-27T04:34:07.571994+00:00\"}",
+      "outputSnapshotJson": "{\"category\": \"HVAC\", \"priority\": \"Normal\", \"vendor_type\": \"HVAC technician\", \"internal_summary\": \"HVAC technician repaired the heater fault and confirmed warm air output was restored.\", \"dispatch_decision\": \"Dispatch HVAC technician to address the issue.\", \"tenant_response_draft\": \"We have logged the heating issue and will arrange an HVAC technician to inspect it.\"}",
+      "metadataSnapshotJson": "{\"review_id\": \"573eda64-0595-4a91-911b-26856594a8ea\", \"feedback_id\": \"eb63cd44-9ad3-4038-9abb-2c1173c9008e\", \"action_count\": 4, \"review_status\": \"Edited\", \"generated_from\": \"level5-feedback\", \"dispatch_outcome\": \"Completed\", \"source_request_id\": \"11fc2cb1-5251-488a-a31f-8df1e32575d3\"}",
+      "exclusionReason": "",
+      "createdAtUtc": "2026-04-27T05:06:30.181775+00:00"
+    },
+    {
+      "id": "37fa95a7-14ef-49c0-8ca0-60bd1e1c64c7",
+      "maintenanceRequestId": "ea78d923-cd8b-40a4-a04d-f9d97e2b811c",
+      "maintenanceResolutionFeedbackId": "ae77b574-13aa-4439-bb14-e4b65d79d753",
+      "status": "Candidate",
+      "inputSnapshotJson": "{\"channel\": \"Email\", \"request_id\": \"ea78d923-cd8b-40a4-a04d-f9d97e2b811c\", \"unit_number\": \"10\", \"category_hint\": \"Security\", \"priority_hint\": \"Normal\", \"property_name\": \"Maple Court\", \"normalized_text\": \"The building entry fob no longer works and the tenant cannot access the building reliably.\", \"reference_number\": \"MR-20260427043645-9DDF1C3\", \"submitted_at_utc\": \"2026-04-27T04:36:45.921761+00:00\"}",
+      "outputSnapshotJson": "{\"category\": \"Security\", \"priority\": \"High\", \"vendor_type\": \"Access control contractor\", \"internal_summary\": \"Access control contractor replaced the faulty fob and confirmed building entry works reliably.\", \"dispatch_decision\": \"Route to staff triage review before dispatch.\", \"tenant_response_draft\": \"We will arrange access support and confirm next steps so building entry is reliable.\"}",
+      "metadataSnapshotJson": "{\"review_id\": \"bb006bc2-643c-43bb-b2d7-3d90bb7ef95e\", \"feedback_id\": \"ae77b574-13aa-4439-bb14-e4b65d79d753\", \"action_count\": 3, \"review_status\": \"Edited\", \"generated_from\": \"level5-feedback\", \"dispatch_outcome\": \"Completed\", \"source_request_id\": \"ea78d923-cd8b-40a4-a04d-f9d97e2b811c\"}",
+      "exclusionReason": "",
+      "createdAtUtc": "2026-04-27T05:06:37.019771+00:00"
+    },
+    {
+      "id": "ed2ee66a-53ff-4066-8a31-d4e779fd3e99",
+      "maintenanceRequestId": "023aab5c-9de9-41b5-8959-14542f374191",
+      "maintenanceResolutionFeedbackId": "b7e8bfd6-be76-4679-8b61-775467827fc3",
+      "status": "Candidate",
+      "inputSnapshotJson": "{\"channel\": \"SmsChat\", \"request_id\": \"023aab5c-9de9-41b5-8959-14542f374191\", \"unit_number\": \"14\", \"category_hint\": \"General\", \"priority_hint\": \"Normal\", \"property_name\": \"Maple Court\", \"normalized_text\": \"The tenant says something is broken near the balcony but is not sure what.\", \"reference_number\": \"MR-20260427043645-5F2D8D7\", \"submitted_at_utc\": \"2026-04-27T04:36:45.967525+00:00\"}",
+      "outputSnapshotJson": "{\"category\": \"General\", \"priority\": \"Normal\", \"vendor_type\": \"General maintenance\", \"internal_summary\": \"General maintenance inspected the balcony area, identified a loose fitting, and completed the repair.\", \"dispatch_decision\": \"Dispatch to the General Maintenance Team for initial assessment.\", \"tenant_response_draft\": \"We need a little more detail and may arrange an inspection for the balcony area.\"}",
+      "metadataSnapshotJson": "{\"review_id\": \"abbea152-81ae-4210-9e6d-86de8fbeb7fa\", \"feedback_id\": \"b7e8bfd6-be76-4679-8b61-775467827fc3\", \"action_count\": 3, \"review_status\": \"Edited\", \"generated_from\": \"level5-feedback\", \"dispatch_outcome\": \"Completed\", \"source_request_id\": \"023aab5c-9de9-41b5-8959-14542f374191\"}",
+      "exclusionReason": "",
+      "createdAtUtc": "2026-04-27T05:06:41.189503+00:00"
+    }
+  ]
+}

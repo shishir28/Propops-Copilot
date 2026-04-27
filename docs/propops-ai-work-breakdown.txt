@@ -127,6 +127,50 @@ Level 6 - Model specialization
     - deploy selected/fine-tuned model behind vLLM
     - expose application-facing API
     - make app call the model through a stable service layer
+   These are the steps don't to enable serving model from vLLM not ollama.
+   ``` Step 1
+        export HF_MODEL_HANDLE=Qwen/Qwen2.5-3B-Instruct
+
+    Step 2
+        export LATEST_VLLM_VERSION=26.02-py3
+        docker pull nvcr.io/nvidia/vllm:${LATEST_VLLM_VERSION}
+
+    Step 3:
+
+        docker run --rm -it --gpus all \
+        -p 8001:8000 \
+        nvcr.io/nvidia/vllm:${LATEST_VLLM_VERSION} \
+        vllm serve ${HF_MODEL_HANDLE}
+
+    Step 4: Verify
+        curl -s http://localhost:8001/v1/chat/completions   -H "Content-Type: application/json"   -d '{
+            "model": "Qwen/Qwen2.5-3B-Instruct",
+            "messages": [
+            { "role": "user", "content": "Reply with only the number: 12 * 17" }
+            ],
+            "max_tokens": 20
+        }' | jq '.choices[0].message.content' ```
+
+   Current Level 6 checkpoint:
+     Angular -> .NET API -> Python AI service -> vLLM -> Qwen model.
+   - A schema issue was observed and fixed through prompt tightening: the model returned `confidence_score` as 85 instead of 0.85.
+   - 20 seed maintenance cases have resolution feedback saved.
+   - All 20 seed cases now have staff triage review and feedback.
+   - Dataset candidates currently include 24 usable Candidate rows and 4 older Excluded rows from before review backfill.
+   - Level 5 candidates were exported and converted to chat-format JSONL with:
+     `python3 scripts/export_level6_finetune_dataset.py`
+   - look for explanation.txt for more explanation on files 
+   - Current fine-tuning split: 21 deduplicated usable examples, 16 train rows, 5 eval rows.
+   - Baseline eval script:
+     `python3 scripts/run_level6_eval.py`
+   - Baseline result file:
+     `data/level6-finetuning/baseline-eval-results.json`
+   - Baseline Qwen/Qwen2.5-3B-Instruct eval result:
+     - schema valid: 5/5
+     - category match: 5/5
+     - priority match: 3/5
+   - Next resume step: choose the LoRA/QLoRA training target and run a tiny adapter fine-tuning experiment against `train.chat.jsonl`, then compare tuned behavior on `eval.chat.jsonl`.
+
 
 Level 7 - Quality and safety
 ----------------------------

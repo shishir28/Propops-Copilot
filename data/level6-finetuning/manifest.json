@@ -1,0 +1,15 @@
+{
+  "baseUrl": "http://localhost:8095/api",
+  "allCandidateRows": 30,
+  "usableCandidateRows": 25,
+  "dedupedCandidateRows": 21,
+  "trainRows": 16,
+  "evalRows": 5,
+  "format": "chat messages JSONL",
+  "notes": [
+    "Only candidates with status Candidate are used.",
+    "When multiple candidates exist for one maintenance request, only the latest row is used.",
+    "Assistant outputs prefer the saved staff triage review when present, because triage fine-tuning should not learn post-repair resolution wording.",
+    "confidence_score is derived during conversion because Level 5 output snapshots do not persist model confidence."
+  ]
+}
