@@ -28,6 +28,12 @@ export const routes: Routes = [
       import('./pages/overview-page.component').then((m) => m.OverviewPageComponent)
   },
   {
+    path: 'operations/:id',
+    canActivate: [authGuard, roleGuard(STAFF_ROLES)],
+    loadComponent: () =>
+      import('./pages/operations-detail-page.component').then((m) => m.OperationsDetailPageComponent)
+  },
+  {
     path: 'intake',
     canActivate: [authGuard, roleGuard(REQUEST_CREATOR_ROLES)],
     loadComponent: () =>

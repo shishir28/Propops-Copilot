@@ -10,7 +10,10 @@ import {
   IngestSmsChatPayload,
   IntakeIngestionResult,
   IntakeSubmission,
-  MaintenanceRequest
+  MaintenanceOperationsDetail,
+  MaintenanceRequest,
+  MaintenanceTriageInferenceResult,
+  SubmitMaintenanceTriageReviewPayload
 } from '../models/propops.models';
 
 @Injectable({ providedIn: 'root' })
@@ -30,6 +33,57 @@ export class PropOpsApiService {
     payload: CreateMaintenanceRequestPayload
   ): Observable<MaintenanceRequest> {
     return this.http.post<MaintenanceRequest>(`${this.apiBaseUrl}/maintenanceRequests`, payload);
+  }
+
+  getMaintenanceOperationsDetail(maintenanceRequestId: string): Observable<MaintenanceOperationsDetail> {
+    return this.http.get<MaintenanceOperationsDetail>(
+      `${this.apiBaseUrl}/maintenanceRequests/${maintenanceRequestId}/operations`
+    );
+  }
+
+  inferMaintenanceTriage(maintenanceRequestId: string): Observable<MaintenanceTriageInferenceResult> {
+    return this.http.post<MaintenanceTriageInferenceResult>(
+      `${this.apiBaseUrl}/ai/maintenance-triage/infer`,
+      { maintenanceRequestId }
+    );
+  }
+
+  submitMaintenanceTriageReview(
+    maintenanceRequestId: string,
+    payload: SubmitMaintenanceTriageReviewPayload
+  ): Observable<MaintenanceOperationsDetail> {
+    return this.http.post<MaintenanceOperationsDetail>(
+      `${this.apiBaseUrl}/maintenanceRequests/${maintenanceRequestId}/operations/triage-review`,
+      payload
+    );
+  }
+
+  createWorkOrder(maintenanceRequestId: string, summary: string): Observable<MaintenanceOperationsDetail> {
+    return this.http.post<MaintenanceOperationsDetail>(
+      `${this.apiBaseUrl}/maintenanceRequests/${maintenanceRequestId}/operations/actions/work-order`,
+      { summary }
+    );
+  }
+
+  assignVendor(maintenanceRequestId: string, vendorName: string): Observable<MaintenanceOperationsDetail> {
+    return this.http.post<MaintenanceOperationsDetail>(
+      `${this.apiBaseUrl}/maintenanceRequests/${maintenanceRequestId}/operations/actions/vendor-assignment`,
+      { vendorName }
+    );
+  }
+
+  notifyTenant(maintenanceRequestId: string, message: string): Observable<MaintenanceOperationsDetail> {
+    return this.http.post<MaintenanceOperationsDetail>(
+      `${this.apiBaseUrl}/maintenanceRequests/${maintenanceRequestId}/operations/actions/tenant-notification`,
+      { message }
+    );
+  }
+
+  logInternalNote(maintenanceRequestId: string, note: string): Observable<MaintenanceOperationsDetail> {
+    return this.http.post<MaintenanceOperationsDetail>(
+      `${this.apiBaseUrl}/maintenanceRequests/${maintenanceRequestId}/operations/actions/internal-note`,
+      { note }
+    );
   }
 
   ingestEmail(payload: IngestEmailPayload): Observable<IntakeIngestionResult> {

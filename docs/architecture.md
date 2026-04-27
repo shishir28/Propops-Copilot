@@ -2,7 +2,7 @@
 
 ## Intent
 
-This application establishes the operational foundation for PropOps Copilot with a live split-runtime design: the portal and operational workflows run through the .NET API, while Levels 2 and 3 run in a separate Python AI service for rules retrieval, LangGraph-orchestrated baseline inference, and guardrails.
+This application establishes the operational foundation for PropOps Copilot with a live split-runtime design: the portal and operational workflows run through the .NET API, while Levels 2 and 3 run in a separate Python AI service for rules retrieval, LangGraph-orchestrated baseline inference, and guardrails. Level 4 human-in-the-loop operations stay in the .NET/API and Angular workflow layer so staff approvals, edits, and action logs remain auditable application data.
 
 ## Domain focus
 
@@ -50,6 +50,12 @@ Levels 2 and 3 currently use this split to implement:
 - explicit AI triage input/output contracts exposed back through the .NET API
 - a baseline inference path orchestrated through LangGraph with explicit guardrail validation and human-review fallback
 
+Level 4 builds on the Level 3 result without moving workflow state into the AI runtime:
+
+- `MaintenanceTriageReview` stores the AI proposal, final staff-approved or edited values, reviewer, guardrail summary, and timestamps
+- `MaintenanceOperationalAction` stores work-order creation, vendor assignment, tenant notification, and internal-note events
+- staff-only APIs under `/api/maintenanceRequests/{id}/operations` expose the review and action workflow
+
 ## Frontend structure
 
 The Angular application uses standalone components and is organized around:
@@ -58,6 +64,7 @@ The Angular application uses standalone components and is organized around:
 - a **Login** page for seeded multi-role portal access
 - a **Workspace** page that acts as the shared post-login landing area
 - an **Overview** page for operational visibility
+- an **Operations detail** page for Level 4 human review and action logging
 - an **Intake** page for structured request creation
 - role-aware navigation, auth guards, and a persisted light/dark theme switcher
 - a simple API service and typed models for backend communication
@@ -97,7 +104,7 @@ The codebase now keeps automated coverage close to each runtime:
 The current architecture leaves room for future modules such as:
 
 - stronger instruct-model integration behind the same adapter boundary
-- dispatch workflows and vendor integration
-- human-review tooling and feedback capture
+- external dispatch, work-order, vendor, SMS, and email integrations behind the existing action-log workflow
+- feedback capture and learning-loop analytics from reviewed triage outcomes
 
 Those capabilities can be introduced without replacing the initial intake foundation because the user-facing API and the AI runtime are already separated.

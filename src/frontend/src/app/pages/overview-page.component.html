@@ -81,6 +81,8 @@
               <dd>{{ request.submittedAtUtc | date: 'medium' }}</dd>
             </div>
           </dl>
+
+          <a class="queue-card__action" [routerLink]="['/operations', request.id]">Open review</a>
         </article>
       }
     </div>

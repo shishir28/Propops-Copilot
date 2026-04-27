@@ -54,6 +54,8 @@ public static class DependencyInjection
         services.AddScoped<IContactDirectoryRepository, ContactDirectoryRepository>();
         services.AddScoped<IIntakeSubmissionRepository, IntakeSubmissionRepository>();
         services.AddScoped<IMaintenanceRequestRepository, MaintenanceRequestRepository>();
+        services.AddScoped<IMaintenanceTriageReviewRepository, MaintenanceTriageReviewRepository>();
+        services.AddScoped<IMaintenanceOperationalActionRepository, MaintenanceOperationalActionRepository>();
         services.AddScoped<IPortalIdentityService, PortalIdentityService>();
         services.AddScoped<PropOpsDataSeeder>();
 

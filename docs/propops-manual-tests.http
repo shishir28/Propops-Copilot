@@ -178,3 +178,75 @@ Content-Type: application/json
 {
   "maintenanceRequestId": "{{createManagerRequest.response.body.id}}"
 }
+
+### Level 4 - load operations detail for the created manager request
+GET {{baseUrl}}/api/maintenanceRequests/{{createManagerRequest.response.body.id}}/operations
+Authorization: Bearer {{managerLogin.response.body.accessToken}}
+
+### Level 4 - save staff-reviewed triage output
+POST {{baseUrl}}/api/maintenanceRequests/{{createManagerRequest.response.body.id}}/operations/triage-review
+Authorization: Bearer {{managerLogin.response.body.accessToken}}
+Content-Type: application/json
+
+{
+  "aiOutput": {
+    "category": "Plumbing",
+    "priority": "High",
+    "vendorType": "Licensed Plumber",
+    "dispatchDecision": "Create an urgent work order and assign the preferred vendor next.",
+    "internalSummary": "High Plumbing issue at Harbour View Residences / 22A.",
+    "tenantResponseDraft": "Thanks for reporting the issue. We are assigning a plumber now."
+  },
+  "guardrails": {
+    "schemaValid": true,
+    "policyPassed": true,
+    "emergencyKeywordCheckPassed": true,
+    "confidenceScore": 0.82,
+    "confidenceThreshold": 0.68,
+    "requiresHumanReview": false,
+    "fallbackApplied": false,
+    "issues": []
+  },
+  "category": "Plumbing",
+  "priority": "High",
+  "vendorType": "Licensed Plumber",
+  "dispatchDecision": "Create an urgent work order and assign the preferred vendor next.",
+  "internalSummary": "High Plumbing issue at Harbour View Residences / 22A.",
+  "tenantResponseDraft": "Thanks for reporting the issue. We are assigning a plumber now."
+}
+
+### Level 4 - create work order
+POST {{baseUrl}}/api/maintenanceRequests/{{createManagerRequest.response.body.id}}/operations/actions/work-order
+Authorization: Bearer {{managerLogin.response.body.accessToken}}
+Content-Type: application/json
+
+{
+  "summary": "Create urgent plumbing work order for the leaking sink."
+}
+
+### Level 4 - assign vendor
+POST {{baseUrl}}/api/maintenanceRequests/{{createManagerRequest.response.body.id}}/operations/actions/vendor-assignment
+Authorization: Bearer {{managerLogin.response.body.accessToken}}
+Content-Type: application/json
+
+{
+  "vendorName": "Licensed Plumber"
+}
+
+### Level 4 - notify tenant
+POST {{baseUrl}}/api/maintenanceRequests/{{createManagerRequest.response.body.id}}/operations/actions/tenant-notification
+Authorization: Bearer {{managerLogin.response.body.accessToken}}
+Content-Type: application/json
+
+{
+  "message": "A plumber has been assigned and will coordinate access shortly."
+}
+
+### Level 4 - log internal note
+POST {{baseUrl}}/api/maintenanceRequests/{{createManagerRequest.response.body.id}}/operations/actions/internal-note
+Authorization: Bearer {{managerLogin.response.body.accessToken}}
+Content-Type: application/json
+
+{
+  "note": "Tenant prefers afternoon access."
+}

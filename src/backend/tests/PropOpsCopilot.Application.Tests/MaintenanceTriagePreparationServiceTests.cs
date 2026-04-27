@@ -244,6 +244,9 @@ public sealed class MaintenanceTriagePreparationServiceTests
 
         public Task AddAsync(MaintenanceRequest request, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
+
+        public Task UpdateAsync(MaintenanceRequest request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
     }
 
     private sealed class StubHttpMessageHandler(Func<HttpRequestMessage, HttpResponseMessage> responder) : HttpMessageHandler

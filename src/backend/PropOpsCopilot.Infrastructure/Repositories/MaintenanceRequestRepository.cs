@@ -23,4 +23,10 @@ public sealed class MaintenanceRequestRepository(PropOpsDbContext dbContext) : I
         await dbContext.MaintenanceRequests.AddAsync(request, cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task UpdateAsync(MaintenanceRequest request, CancellationToken cancellationToken = default)
+    {
+        dbContext.MaintenanceRequests.Update(request);
+        await dbContext.SaveChangesAsync(cancellationToken);
+    }
 }

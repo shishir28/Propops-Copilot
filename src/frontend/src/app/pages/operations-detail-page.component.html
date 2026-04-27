@@ -1,0 +1,196 @@
+<a class="back-link" routerLink="/overview">Back to overview</a>
+
+@if (loading()) {
+  <section class="state-panel">Loading operation...</section>
+} @else if (detail(); as currentDetail) {
+  <section class="detail-header">
+    <div>
+      <p class="eyebrow">Human review</p>
+      <h2>{{ currentDetail.request.referenceNumber }}</h2>
+      <p>
+        {{ currentDetail.request.propertyName }} · Unit {{ currentDetail.request.unitNumber || 'TBC' }}
+      </p>
+    </div>
+    <div class="status-stack">
+      <span class="pill">{{ currentDetail.request.status }}</span>
+      <span class="pill pill--priority">{{ currentDetail.request.priority }}</span>
+    </div>
+  </section>
+
+  @if (error()) {
+    <section class="state-panel state-panel--error">{{ error() }}</section>
+  }
+
+  @if (success()) {
+    <section class="state-panel state-panel--success">{{ success() }}</section>
+  }
+
+  <section class="operations-layout">
+    <article class="request-panel">
+      <p class="eyebrow">Request</p>
+      <h3>{{ currentDetail.request.submitterName }}</h3>
+      <p class="request-copy">{{ currentDetail.request.description }}</p>
+      <dl>
+        <div>
+          <dt>Channel</dt>
+          <dd>{{ currentDetail.request.channel }}</dd>
+        </div>
+        <div>
+          <dt>Assigned team</dt>
+          <dd>{{ currentDetail.request.assignedTeam }}</dd>
+        </div>
+        <div>
+          <dt>Submitted</dt>
+          <dd>{{ currentDetail.request.submittedAtUtc | date: 'medium' }}</dd>
+        </div>
+        <div>
+          <dt>Target response</dt>
+          <dd>{{ currentDetail.request.targetResponseByUtc | date: 'medium' }}</dd>
+        </div>
+      </dl>
+    </article>
+
+    <article class="review-panel">
+      <div class="panel-header">
+        <div>
+          <p class="eyebrow">AI draft</p>
+          <h3>Approve or edit output</h3>
+        </div>
+        <button type="button" (click)="runInference()" [disabled]="busy()">Run AI triage</button>
+      </div>
+
+      @if (inference(); as currentInference) {
+        <div class="guardrail-strip" [class.guardrail-strip--review]="currentInference.guardrails.requiresHumanReview">
+          <strong>
+            Confidence {{ currentInference.guardrails.confidenceScore | percent: '1.0-0' }}
+          </strong>
+          <span>
+            Threshold {{ currentInference.guardrails.confidenceThreshold | percent: '1.0-0' }}
+          </span>
+          @if (currentInference.guardrails.requiresHumanReview) {
+            <span>Human review required</span>
+          } @else {
+            <span>Guardrails passed</span>
+          }
+        </div>
+
+        @if (currentInference.guardrails.issues.length > 0) {
+          <ul class="issue-list">
+            @for (issue of currentInference.guardrails.issues; track issue.code) {
+              <li>{{ issue.code }} · {{ issue.message }}</li>
+            }
+          </ul>
+        }
+      } @else if (currentDetail.latestReview) {
+        <div class="guardrail-strip">
+          <strong>{{ currentDetail.latestReview.status }}</strong>
+          <span>Reviewed by {{ currentDetail.latestReview.reviewedBy }}</span>
+        </div>
+      }
+
+      <form [formGroup]="reviewForm" class="review-form" (ngSubmit)="submitReview()">
+        <label>
+          Category
+          <select formControlName="category">
+            @for (category of categories; track category) {
+              <option [value]="category">{{ category }}</option>
+            }
+          </select>
+        </label>
+
+        <label>
+          Priority
+          <select formControlName="priority">
+            @for (priority of priorities; track priority) {
+              <option [value]="priority">{{ priority }}</option>
+            }
+          </select>
+        </label>
+
+        <label>
+          Vendor type
+          <input formControlName="vendorType" />
+        </label>
+
+        <label>
+          Dispatch decision
+          <textarea formControlName="dispatchDecision" rows="3"></textarea>
+        </label>
+
+        <label>
+          Internal summary
+          <textarea formControlName="internalSummary" rows="3"></textarea>
+        </label>
+
+        <label>
+          Tenant response draft
+          <textarea formControlName="tenantResponseDraft" rows="4"></textarea>
+        </label>
+
+        <button type="submit" [disabled]="busy() || !inference()">Save review</button>
+      </form>
+    </article>
+  </section>
+
+  <section class="action-panel">
+    <div class="panel-header">
+      <div>
+        <p class="eyebrow">Action integrations</p>
+        <h3>Coordinate next steps</h3>
+      </div>
+    </div>
+
+    <form [formGroup]="actionForm" class="action-grid">
+      <label>
+        Work order summary
+        <textarea formControlName="workOrderSummary" rows="3"></textarea>
+        <button type="button" (click)="createWorkOrder()" [disabled]="busy()">Create work order</button>
+      </label>
+
+      <label>
+        Vendor
+        <input formControlName="vendorName" />
+        <button type="button" (click)="assignVendor()" [disabled]="busy()">Assign vendor</button>
+      </label>
+
+      <label>
+        Tenant message
+        <textarea formControlName="tenantMessage" rows="3"></textarea>
+        <button type="button" (click)="notifyTenant()" [disabled]="busy()">Notify tenant</button>
+      </label>
+
+      <label>
+        Internal note
+        <textarea formControlName="internalNote" rows="3"></textarea>
+        <button type="button" (click)="logInternalNote()" [disabled]="busy()">Log note</button>
+      </label>
+    </form>
+  </section>
+
+  <section class="history-panel">
+    <div class="panel-header">
+      <div>
+        <p class="eyebrow">History</p>
+        <h3>Operational action log</h3>
+      </div>
+      <span>{{ currentDetail.actions.length }} actions</span>
+    </div>
+
+    @if (currentDetail.actions.length === 0) {
+      <p class="empty-state">No actions have been logged yet.</p>
+    } @else {
+      <div class="action-list">
+        @for (action of currentDetail.actions; track trackByAction($index, action)) {
+          <article>
+            <strong>{{ action.actionType }}</strong>
+            <p>{{ action.detail }}</p>
+            @if (action.externalReference) {
+              <span>{{ action.externalReference }}</span>
+            }
+            <small>{{ action.createdAtUtc | date: 'medium' }} · {{ action.createdBy }}</small>
+          </article>
+        }
+      </div>
+    }
+  </section>
+}

@@ -13,6 +13,10 @@ public sealed class PropOpsDbContext(DbContextOptions<PropOpsDbContext> options)
 
     public DbSet<MaintenanceRequest> MaintenanceRequests => Set<MaintenanceRequest>();
 
+    public DbSet<MaintenanceTriageReview> MaintenanceTriageReviews => Set<MaintenanceTriageReview>();
+
+    public DbSet<MaintenanceOperationalAction> MaintenanceOperationalActions => Set<MaintenanceOperationalAction>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

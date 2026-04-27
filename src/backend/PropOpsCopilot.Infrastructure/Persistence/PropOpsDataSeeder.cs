@@ -114,6 +114,45 @@ public sealed class PropOpsDataSeeder(
                     FOREIGN KEY ("MaintenanceRequestId") REFERENCES maintenance_requests ("Id") ON DELETE CASCADE
             );
 
+            CREATE TABLE IF NOT EXISTS maintenance_triage_reviews (
+                "Id" uuid NOT NULL,
+                "MaintenanceRequestId" uuid NOT NULL,
+                "AiCategory" character varying(40) NOT NULL,
+                "AiPriority" character varying(40) NOT NULL,
+                "AiVendorType" character varying(160) NOT NULL,
+                "AiDispatchDecision" character varying(1000) NOT NULL,
+                "AiInternalSummary" character varying(1200) NOT NULL,
+                "AiTenantResponseDraft" character varying(1200) NOT NULL,
+                "FinalCategory" character varying(40) NOT NULL,
+                "FinalPriority" character varying(40) NOT NULL,
+                "FinalVendorType" character varying(160) NOT NULL,
+                "FinalDispatchDecision" character varying(1000) NOT NULL,
+                "FinalInternalSummary" character varying(1200) NOT NULL,
+                "FinalTenantResponseDraft" character varying(1200) NOT NULL,
+                "GuardrailRequiresHumanReview" boolean NOT NULL,
+                "GuardrailSummary" character varying(2000) NOT NULL,
+                "Status" character varying(40) NOT NULL,
+                "ReviewedBy" character varying(256) NOT NULL,
+                "CreatedAtUtc" timestamp with time zone NOT NULL,
+                "ReviewedAtUtc" timestamp with time zone NOT NULL,
+                CONSTRAINT "PK_maintenance_triage_reviews" PRIMARY KEY ("Id"),
+                CONSTRAINT "FK_maintenance_triage_reviews_maintenance_requests_MaintenanceRequestId"
+                    FOREIGN KEY ("MaintenanceRequestId") REFERENCES maintenance_requests ("Id") ON DELETE CASCADE
+            );
+
+            CREATE TABLE IF NOT EXISTS maintenance_operational_actions (
+                "Id" uuid NOT NULL,
+                "MaintenanceRequestId" uuid NOT NULL,
+                "ActionType" character varying(60) NOT NULL,
+                "Detail" character varying(2000) NOT NULL,
+                "ExternalReference" character varying(80) NOT NULL,
+                "CreatedBy" character varying(256) NOT NULL,
+                "CreatedAtUtc" timestamp with time zone NOT NULL,
+                CONSTRAINT "PK_maintenance_operational_actions" PRIMARY KEY ("Id"),
+                CONSTRAINT "FK_maintenance_operational_actions_maintenance_requests_MaintenanceRequestId"
+                    FOREIGN KEY ("MaintenanceRequestId") REFERENCES maintenance_requests ("Id") ON DELETE CASCADE
+            );
+
             CREATE INDEX IF NOT EXISTS "IX_contact_directory_entries_EmailAddress"
                 ON contact_directory_entries ("EmailAddress");
             CREATE INDEX IF NOT EXISTS "IX_contact_directory_entries_PhoneNumber"
@@ -124,6 +163,14 @@ public sealed class PropOpsDataSeeder(
                 ON intake_submissions ("ReceivedAtUtc");
             CREATE INDEX IF NOT EXISTS "IX_intake_submissions_SourceReference"
                 ON intake_submissions ("SourceReference");
+            CREATE INDEX IF NOT EXISTS "IX_maintenance_triage_reviews_MaintenanceRequestId"
+                ON maintenance_triage_reviews ("MaintenanceRequestId");
+            CREATE INDEX IF NOT EXISTS "IX_maintenance_triage_reviews_ReviewedAtUtc"
+                ON maintenance_triage_reviews ("ReviewedAtUtc");
+            CREATE INDEX IF NOT EXISTS "IX_maintenance_operational_actions_MaintenanceRequestId"
+                ON maintenance_operational_actions ("MaintenanceRequestId");
+            CREATE INDEX IF NOT EXISTS "IX_maintenance_operational_actions_CreatedAtUtc"
+                ON maintenance_operational_actions ("CreatedAtUtc");
             """;
 
         await dbContext.Database.ExecuteSqlRawAsync(operationalSchemaSql, cancellationToken);

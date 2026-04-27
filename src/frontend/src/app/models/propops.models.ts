@@ -88,6 +88,91 @@ export interface CreateMaintenanceRequestPayload {
   channel: IntakeChannel;
 }
 
+export interface MaintenanceTriageOutputContract {
+  category: MaintenanceRequestCategory;
+  priority: MaintenanceRequestPriority;
+  vendorType: string;
+  dispatchDecision: string;
+  internalSummary: string;
+  tenantResponseDraft: string;
+}
+
+export interface MaintenanceTriageGuardrailIssue {
+  code: string;
+  severity: 'Warning' | 'Blocking';
+  message: string;
+}
+
+export interface MaintenanceTriageGuardrailResult {
+  schemaValid: boolean;
+  policyPassed: boolean;
+  emergencyKeywordCheckPassed: boolean;
+  confidenceScore: number;
+  confidenceThreshold: number;
+  requiresHumanReview: boolean;
+  fallbackApplied: boolean;
+  issues: MaintenanceTriageGuardrailIssue[];
+}
+
+export interface MaintenanceTriageInferenceResult {
+  rulesVersion: string;
+  outputContract: MaintenanceTriageOutputContract;
+  guardrails: MaintenanceTriageGuardrailResult;
+  inferenceMetadata: {
+    providerMode: string;
+    modelName: string;
+  };
+}
+
+export interface SubmitMaintenanceTriageReviewPayload {
+  aiOutput: MaintenanceTriageOutputContract;
+  guardrails: MaintenanceTriageGuardrailResult;
+  category: MaintenanceRequestCategory;
+  priority: MaintenanceRequestPriority;
+  vendorType: string;
+  dispatchDecision: string;
+  internalSummary: string;
+  tenantResponseDraft: string;
+}
+
+export interface MaintenanceTriageReview {
+  id: string;
+  maintenanceRequestId: string;
+  aiCategory: MaintenanceRequestCategory;
+  aiPriority: MaintenanceRequestPriority;
+  aiVendorType: string;
+  aiDispatchDecision: string;
+  aiInternalSummary: string;
+  aiTenantResponseDraft: string;
+  finalCategory: MaintenanceRequestCategory;
+  finalPriority: MaintenanceRequestPriority;
+  finalVendorType: string;
+  finalDispatchDecision: string;
+  finalInternalSummary: string;
+  finalTenantResponseDraft: string;
+  guardrailRequiresHumanReview: boolean;
+  guardrailSummary: string;
+  status: 'Approved' | 'Edited';
+  reviewedBy: string;
+  reviewedAtUtc: string;
+}
+
+export interface MaintenanceOperationalAction {
+  id: string;
+  maintenanceRequestId: string;
+  actionType: 'WorkOrderCreated' | 'VendorAssigned' | 'TenantNotified' | 'InternalNoteLogged';
+  detail: string;
+  externalReference: string;
+  createdBy: string;
+  createdAtUtc: string;
+}
+
+export interface MaintenanceOperationsDetail {
+  request: MaintenanceRequest;
+  latestReview: MaintenanceTriageReview | null;
+  actions: MaintenanceOperationalAction[];
+}
+
 export interface IngestEmailPayload {
   submitterName: string;
   emailAddress: string;

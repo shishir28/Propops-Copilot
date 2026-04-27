@@ -102,6 +102,28 @@ public sealed class MaintenanceRequest
         Status = status;
     }
 
+    public void ApplyReviewedTriage(
+        MaintenanceRequestCategory category,
+        MaintenanceRequestPriority priority,
+        string internalSummary)
+    {
+        if (string.IsNullOrWhiteSpace(internalSummary))
+            throw new ArgumentException("Internal summary is required.", nameof(internalSummary));
+
+        Category = category;
+        Priority = priority;
+        InternalSummary = internalSummary.Trim();
+        AssignedTeam = ResolveAssignedTeam(category, priority);
+        TargetResponseByUtc = SubmittedAtUtc.AddHours(priority switch
+        {
+            MaintenanceRequestPriority.Emergency => 1,
+            MaintenanceRequestPriority.High => 4,
+            MaintenanceRequestPriority.Normal => 12,
+            _ => 24
+        });
+        Status = MaintenanceRequestStatus.InReview;
+    }
+
     private static string BuildSummary(
         MaintenanceRequestCategory category,
         MaintenanceRequestPriority priority,

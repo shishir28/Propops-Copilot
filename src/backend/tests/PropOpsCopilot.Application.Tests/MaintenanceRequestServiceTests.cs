@@ -90,6 +90,9 @@ public sealed class MaintenanceRequestServiceTests
             AddedRequest = request;
             return Task.CompletedTask;
         }
+
+        public Task UpdateAsync(MaintenanceRequest request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
     }
 
     private sealed class ListingMaintenanceRequestRepository(IReadOnlyList<MaintenanceRequest> requests) : IMaintenanceRequestRepository
@@ -101,6 +104,9 @@ public sealed class MaintenanceRequestServiceTests
             Task.FromResult(requests.FirstOrDefault(request => request.Id == id));
 
         public Task AddAsync(MaintenanceRequest request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task UpdateAsync(MaintenanceRequest request, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
     }
 }

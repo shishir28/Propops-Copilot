@@ -11,6 +11,7 @@ public static class DependencyInjection
         services.AddScoped<OmnichannelIntakeService>();
         services.AddScoped<DashboardService>();
         services.AddScoped<PortalAuthenticationService>();
+        services.AddScoped<MaintenanceOperationsService>();
 
         return services;
     }

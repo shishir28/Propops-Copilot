@@ -62,6 +62,96 @@ describe('PropOpsApiService', () => {
     request.flush({});
   });
 
+  it('requests maintenance operations detail from the API', () => {
+    const service = TestBed.inject(PropOpsApiService);
+    const http = TestBed.inject(HttpTestingController);
+
+    service.getMaintenanceOperationsDetail('request-1').subscribe();
+
+    const request = http.expectOne(`${apiBaseUrl}/maintenanceRequests/request-1/operations`);
+    expect(request.request.method).toBe('GET');
+    request.flush({});
+  });
+
+  it('posts maintenance triage inference requests to the API', () => {
+    const service = TestBed.inject(PropOpsApiService);
+    const http = TestBed.inject(HttpTestingController);
+
+    service.inferMaintenanceTriage('request-1').subscribe();
+
+    const request = http.expectOne(`${apiBaseUrl}/ai/maintenance-triage/infer`);
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toEqual({ maintenanceRequestId: 'request-1' });
+    request.flush({});
+  });
+
+  it('posts reviewed triage output to the operations API', () => {
+    const service = TestBed.inject(PropOpsApiService);
+    const http = TestBed.inject(HttpTestingController);
+    const output = {
+      category: 'Plumbing' as const,
+      priority: 'High' as const,
+      vendorType: 'Licensed Plumber',
+      dispatchDecision: 'Create an urgent work order.',
+      internalSummary: 'High plumbing issue.',
+      tenantResponseDraft: 'A plumber is being assigned.'
+    };
+    const guardrails = {
+      schemaValid: true,
+      policyPassed: true,
+      emergencyKeywordCheckPassed: true,
+      confidenceScore: 0.84,
+      confidenceThreshold: 0.68,
+      requiresHumanReview: false,
+      fallbackApplied: false,
+      issues: []
+    };
+
+    service
+      .submitMaintenanceTriageReview('request-1', {
+        aiOutput: output,
+        guardrails,
+        category: 'Plumbing',
+        priority: 'High',
+        vendorType: 'Licensed Plumber',
+        dispatchDecision: 'Create an urgent work order.',
+        internalSummary: 'High plumbing issue.',
+        tenantResponseDraft: 'A plumber is being assigned.'
+      })
+      .subscribe();
+
+    const request = http.expectOne(`${apiBaseUrl}/maintenanceRequests/request-1/operations/triage-review`);
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body.aiOutput).toEqual(output);
+    request.flush({});
+  });
+
+  it('posts operational actions to the API', () => {
+    const service = TestBed.inject(PropOpsApiService);
+    const http = TestBed.inject(HttpTestingController);
+
+    service.createWorkOrder('request-1', 'Create work order.').subscribe();
+    service.assignVendor('request-1', 'Licensed Plumber').subscribe();
+    service.notifyTenant('request-1', 'Vendor assigned.').subscribe();
+    service.logInternalNote('request-1', 'Tenant prefers morning access.').subscribe();
+
+    const workOrder = http.expectOne(`${apiBaseUrl}/maintenanceRequests/request-1/operations/actions/work-order`);
+    expect(workOrder.request.body).toEqual({ summary: 'Create work order.' });
+    workOrder.flush({});
+
+    const vendor = http.expectOne(`${apiBaseUrl}/maintenanceRequests/request-1/operations/actions/vendor-assignment`);
+    expect(vendor.request.body).toEqual({ vendorName: 'Licensed Plumber' });
+    vendor.flush({});
+
+    const tenant = http.expectOne(`${apiBaseUrl}/maintenanceRequests/request-1/operations/actions/tenant-notification`);
+    expect(tenant.request.body).toEqual({ message: 'Vendor assigned.' });
+    tenant.flush({});
+
+    const note = http.expectOne(`${apiBaseUrl}/maintenanceRequests/request-1/operations/actions/internal-note`);
+    expect(note.request.body).toEqual({ note: 'Tenant prefers morning access.' });
+    note.flush({});
+  });
+
   it('posts email intake payloads to the API', () => {
     const service = TestBed.inject(PropOpsApiService);
     const http = TestBed.inject(HttpTestingController);

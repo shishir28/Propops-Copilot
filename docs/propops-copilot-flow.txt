@@ -35,8 +35,8 @@ PropOps Copilot - Overall Solution Flow
           |
           v
 +----------------------------------------------+
-| Fine-Tuned Model (vLLM-served)               |
-| Property Mgmt Maintenance Triage Copilot     |
+| Level 3 Inference                            |
+| heuristic baseline or OpenAI-compatible LLM  |
 |                                              |
 | Outputs:                                     |
 | - category                                   |
@@ -70,9 +70,9 @@ PropOps Copilot - Overall Solution Flow
               v
 +-----------------------------+
 | Action Layer                |
-| - create work order         |
-| - assign vendor             |
-| - notify tenant             |
+| - create work order log     |
+| - assign vendor log         |
+| - notify tenant log         |
 | - log internal note         |
 +---------+-------------------+
           |

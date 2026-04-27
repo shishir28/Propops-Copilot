@@ -66,5 +66,8 @@ public sealed class DashboardServiceTests
 
         public Task AddAsync(MaintenanceRequest request, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
+
+        public Task UpdateAsync(MaintenanceRequest request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
     }
 }

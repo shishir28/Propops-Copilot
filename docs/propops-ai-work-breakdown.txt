@@ -75,15 +75,20 @@ Level 4 - Human-in-the-loop operations
 --------------------------------------
 
 7. Expand human review workflow
-   - allow staff to approve/edit AI outputs
-   - override category/priority/dispatch decision
-   - edit tenant response draft
+   - allow staff to approve/edit AI outputs [implemented]
+   - override category/priority/dispatch decision [implemented]
+   - edit tenant response draft [implemented]
 
 8. Build action integrations
-   - create work order
-   - assign vendor
-   - notify tenant
-   - log internal note
+   - create work order [implemented as simulated action log]
+   - assign vendor [implemented as simulated action log]
+   - notify tenant [implemented as simulated action log]
+   - log internal note [implemented]
+
+Level 4 note:
+- staff-facing operations detail UI now runs Level 3 inference, lets staff edit/approve the output, and saves an auditable triage review
+- the .NET API persists triage reviews and operational action events in PostgreSQL
+- external work-order, vendor, SMS, and email providers are still simulated by action log records
 
 Level 5 - Learning loop
 -----------------------
@@ -150,4 +155,4 @@ Important design rule
 Immediate next milestone
 ------------------------
 
-connectors + preprocessing + rules/retrieval + baseline model integration
+Level 5 feedback capture and learning-loop preparation from reviewed triage decisions and action outcomes
