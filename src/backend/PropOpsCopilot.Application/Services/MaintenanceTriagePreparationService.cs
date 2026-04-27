@@ -37,28 +37,7 @@ public sealed class MaintenanceTriagePreparationService(
         PrepareMaintenanceTriageCommand command,
         CancellationToken cancellationToken = default)
     {
-        if (command.MaintenanceRequestId == Guid.Empty)
-        {
-            throw new ArgumentException("A maintenance request id is required.", nameof(command.MaintenanceRequestId));
-        }
-
-        var maintenanceRequest = await maintenanceRequestRepository.GetByIdAsync(command.MaintenanceRequestId, cancellationToken);
-        if (maintenanceRequest is null)
-        {
-            throw new KeyNotFoundException($"Maintenance request '{command.MaintenanceRequestId}' was not found.");
-        }
-
-        var payload = new PythonInputContractRequest(
-            maintenanceRequest.Id.ToString(),
-            maintenanceRequest.ReferenceNumber,
-            maintenanceRequest.Description,
-            maintenanceRequest.PropertyName,
-            string.IsNullOrWhiteSpace(maintenanceRequest.UnitNumber) ? null : maintenanceRequest.UnitNumber,
-            maintenanceRequest.Channel.ToString(),
-            maintenanceRequest.Category.ToString(),
-            maintenanceRequest.Priority.ToString(),
-            DetectAfterHours(maintenanceRequest.SubmittedAtUtc),
-            maintenanceRequest.SubmittedAtUtc);
+        var payload = await BuildInputPayloadAsync(command.MaintenanceRequestId, cancellationToken);
 
         using var response = await aiClient.PostAsJsonAsync(
             "/v1/maintenance/triage/prepare",
@@ -73,7 +52,55 @@ public sealed class MaintenanceTriagePreparationService(
             Map(prepared.InputContract),
             Map(prepared.OutputContractTemplate),
             prepared.OutputContractSchema,
-            prepared.KnowledgeItems.Select(Map).ToArray());
+            [.. prepared.KnowledgeItems.Select(Map)]);
+    }
+
+    public async Task<MaintenanceTriageInferenceResultDto> InferAsync(
+        PrepareMaintenanceTriageCommand command,
+        CancellationToken cancellationToken = default)
+    {
+        var payload = await BuildInputPayloadAsync(command.MaintenanceRequestId, cancellationToken);
+
+        using var response = await aiClient.PostAsJsonAsync(
+            "/v1/maintenance/triage/infer",
+            payload,
+            JsonOptions,
+            cancellationToken);
+
+        var inferred = await ReadResponseAsync<PythonInferenceResponse>(response, "run Level 3 triage inference", cancellationToken);
+
+        return new MaintenanceTriageInferenceResultDto(
+            inferred.RulesVersion,
+            Map(inferred.InputContract),
+            Map(inferred.OutputContract),
+            inferred.OutputContractSchema,
+            [.. inferred.KnowledgeItems.Select(Map)],
+            Map(inferred.Guardrails),
+            Map(inferred.InferenceMetadata));
+    }
+
+    private async Task<PythonInputContractRequest> BuildInputPayloadAsync(
+        Guid maintenanceRequestId,
+        CancellationToken cancellationToken)
+    {
+        if (maintenanceRequestId == Guid.Empty)
+            throw new ArgumentException("A maintenance request id is required.", nameof(maintenanceRequestId));
+
+        var maintenanceRequest = await maintenanceRequestRepository.GetByIdAsync(maintenanceRequestId, cancellationToken);
+        if (maintenanceRequest is null)
+            throw new KeyNotFoundException($"Maintenance request '{maintenanceRequestId}' was not found.");
+
+        return new PythonInputContractRequest(
+            maintenanceRequest.Id.ToString(),
+            maintenanceRequest.ReferenceNumber,
+            maintenanceRequest.Description,
+            maintenanceRequest.PropertyName,
+            string.IsNullOrWhiteSpace(maintenanceRequest.UnitNumber) ? null : maintenanceRequest.UnitNumber,
+            maintenanceRequest.Channel.ToString(),
+            maintenanceRequest.Category.ToString(),
+            maintenanceRequest.Priority.ToString(),
+            DetectAfterHours(maintenanceRequest.SubmittedAtUtc),
+            maintenanceRequest.SubmittedAtUtc);
     }
 
     private bool DetectAfterHours(DateTimeOffset submittedAtUtc)
@@ -132,6 +159,28 @@ public sealed class MaintenanceTriagePreparationService(
             item.Content,
             item.Rationale);
 
+    private static MaintenanceTriageGuardrailResultDto Map(PythonGuardrailResult guardrails) =>
+        new(
+            guardrails.SchemaValid,
+            guardrails.PolicyPassed,
+            guardrails.EmergencyKeywordCheckPassed,
+            guardrails.ConfidenceScore,
+            guardrails.ConfidenceThreshold,
+            guardrails.RequiresHumanReview,
+            guardrails.FallbackApplied,
+            [.. guardrails.Issues.Select(Map)]);
+
+    private static MaintenanceTriageGuardrailIssueDto Map(PythonGuardrailIssue issue) =>
+        new(
+            issue.Code,
+            issue.Severity,
+            issue.Message);
+
+    private static MaintenanceTriageInferenceMetadataDto Map(PythonInferenceMetadata metadata) =>
+        new(
+            metadata.ProviderMode,
+            metadata.ModelName);
+
     private sealed record PythonContractsResponse(
         [property: JsonPropertyName("rules_version")] string RulesVersion,
         [property: JsonPropertyName("input_contract_schema")] JsonElement InputContractSchema,
@@ -144,6 +193,15 @@ public sealed class MaintenanceTriagePreparationService(
         [property: JsonPropertyName("output_contract_template")] PythonOutputContract OutputContractTemplate,
         [property: JsonPropertyName("output_contract_schema")] JsonElement OutputContractSchema,
         [property: JsonPropertyName("knowledge_items")] IReadOnlyList<PythonKnowledgeItem> KnowledgeItems);
+
+    private sealed record PythonInferenceResponse(
+        [property: JsonPropertyName("rules_version")] string RulesVersion,
+        [property: JsonPropertyName("input_contract")] PythonInputContract InputContract,
+        [property: JsonPropertyName("output_contract")] PythonOutputContract OutputContract,
+        [property: JsonPropertyName("output_contract_schema")] JsonElement OutputContractSchema,
+        [property: JsonPropertyName("knowledge_items")] IReadOnlyList<PythonKnowledgeItem> KnowledgeItems,
+        [property: JsonPropertyName("guardrails")] PythonGuardrailResult Guardrails,
+        [property: JsonPropertyName("inference_metadata")] PythonInferenceMetadata InferenceMetadata);
 
     private sealed record PythonInputContractRequest(
         [property: JsonPropertyName("request_id")] string RequestId,
@@ -183,4 +241,23 @@ public sealed class MaintenanceTriagePreparationService(
         [property: JsonPropertyName("title")] string Title,
         [property: JsonPropertyName("content")] string Content,
         [property: JsonPropertyName("rationale")] string Rationale);
+
+    private sealed record PythonGuardrailResult(
+        [property: JsonPropertyName("schema_valid")] bool SchemaValid,
+        [property: JsonPropertyName("policy_passed")] bool PolicyPassed,
+        [property: JsonPropertyName("emergency_keyword_check_passed")] bool EmergencyKeywordCheckPassed,
+        [property: JsonPropertyName("confidence_score")] double ConfidenceScore,
+        [property: JsonPropertyName("confidence_threshold")] double ConfidenceThreshold,
+        [property: JsonPropertyName("requires_human_review")] bool RequiresHumanReview,
+        [property: JsonPropertyName("fallback_applied")] bool FallbackApplied,
+        [property: JsonPropertyName("issues")] IReadOnlyList<PythonGuardrailIssue> Issues);
+
+    private sealed record PythonGuardrailIssue(
+        [property: JsonPropertyName("code")] string Code,
+        [property: JsonPropertyName("severity")] string Severity,
+        [property: JsonPropertyName("message")] string Message);
+
+    private sealed record PythonInferenceMetadata(
+        [property: JsonPropertyName("provider_mode")] string ProviderMode,
+        [property: JsonPropertyName("model_name")] string ModelName);
 }

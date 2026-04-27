@@ -1,12 +1,12 @@
 # PropOps Copilot
 
-PropOps Copilot is a UI-first property maintenance operations platform. The current implementation covers structured intake, queue visibility, deterministic normalization, and Level 2 rules-and-knowledge preparation using Angular, ASP.NET Core, PostgreSQL, and a separate Python AI service.
+PropOps Copilot is a UI-first property maintenance operations platform. The current implementation covers structured intake, queue visibility, deterministic normalization, Level 2 rules-and-knowledge preparation, and Level 3 baseline AI inference with guardrails using Angular, ASP.NET Core, PostgreSQL, and a separate Python AI service.
 
 ## Stack
 
 - **Frontend:** Angular 21 with standalone components and modern SCSS styling
 - **Backend:** ASP.NET Core Web API with Domain, Application, Infrastructure, and Api projects
-- **AI runtime:** Python service reserved for inference, orchestration, retrieval, and model-serving work
+- **AI runtime:** Python FastAPI service using LangGraph for inference orchestration, retrieval, and guardrails
 - **Persistence:** PostgreSQL via Entity Framework Core
 - **Local orchestration:** Docker Compose
 
@@ -82,10 +82,23 @@ uvicorn propops_ai_service.main:app --reload --host 0.0.0.0 --port 8000
 
 The .NET API is configured to call the Python service through `AiService:BaseUrl`, which defaults to `http://localhost:8000` outside Docker and `http://ai-service:8000` inside Docker Compose.
 
-Level 2 is now implemented across that boundary:
+The Python AI service uses LangGraph to orchestrate the inference path and defaults to a local-safe heuristic mode for development and tests:
+
+- `PROP_OPS_AI_INFERENCE_MODE=heuristic`
+- `PROP_OPS_AI_MODEL_NAME=Qwen/Qwen2.5-7B-Instruct`
+- `PROP_OPS_AI_CONFIDENCE_THRESHOLD=0.68`
+
+Switch to an OpenAI-compatible instruct model endpoint by setting:
+
+- `PROP_OPS_AI_INFERENCE_MODE=openai-compatible`
+- `PROP_OPS_AI_OPENAI_BASE_URL=<your-openai-compatible-base-url>`
+- `PROP_OPS_AI_OPENAI_API_KEY=<optional-api-key>`
+
+Levels 2 and 3 are now implemented across that boundary:
 
 - the Python service owns the structured maintenance knowledge base and triage contract schemas
-- the .NET API exposes staff-facing endpoints that prepare rules and knowledge for an existing maintenance request
+- the Python service can run baseline triage inference and guardrails through a LangGraph workflow behind a provider adapter
+- the .NET API exposes staff-facing endpoints that prepare rules, retrieve contracts, and infer a triage decision for an existing maintenance request
 
 ## Playwright tests
 
@@ -94,6 +107,7 @@ The frontend workspace now includes Playwright coverage for:
 - manager request creation through the Angular portal
 - Level 1 intake and normalization through the API connector endpoints
 - Level 2 rules and knowledge retrieval through the .NET API
+- Level 3 baseline inference and guardrail fallback behavior through the .NET API
 
 Start the full stack first:
 
@@ -165,6 +179,7 @@ Inside Compose, the Playwright service targets:
 - Keep the user-facing runtime clean so current and future AI work happens in the dedicated Python service instead of the portal API
 - Retrieve maintenance SOPs, vendor rules, emergency policy, and property notes through the Python AI service
 - Return explicit Level 2 AI input/output contracts for maintenance triage preparation
+- Run Level 3 baseline triage inference through the Python AI service and return guardrail metadata, confidence, and human-review fallback signals
 
 ## Portal authentication
 
@@ -186,4 +201,4 @@ Current access boundaries:
 
 ## Deferred scope
 
-This version intentionally excludes baseline inference, LLM orchestration, fine-tuning, and vLLM-backed serving. The runtime boundary is already active, though: Angular talks only to the .NET API, and the .NET API is the only application allowed to call the Python AI service for current and future AI features.
+This version intentionally excludes human-review tooling, action integrations, fine-tuning, and vLLM-backed serving. The runtime boundary is already active, though: Angular talks only to the .NET API, and the .NET API is the only application allowed to call the Python AI service for current and future AI features.

@@ -37,6 +37,10 @@ services:
       context: .
       dockerfile: src/ai/propops-ai-service/Dockerfile
     container_name: propops-ai-service
+    environment:
+      PROP_OPS_AI_INFERENCE_MODE: heuristic
+      PROP_OPS_AI_MODEL_NAME: Qwen/Qwen2.5-7B-Instruct
+      PROP_OPS_AI_CONFIDENCE_THRESHOLD: "0.68"
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health').read()"]
       interval: 10s

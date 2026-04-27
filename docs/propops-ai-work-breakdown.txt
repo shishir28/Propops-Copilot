@@ -66,6 +66,11 @@ Level 3 - First AI path
    - emergency keyword checks
    - confidence/fallback rules
 
+Level 3 note:
+- baseline inference now runs in the Python AI service through a LangGraph workflow behind a configurable provider adapter
+- the default local mode is a heuristic baseline so the end-to-end path stays testable without an external model host
+- the .NET API exposes triage inference results with guardrail metadata, confidence, and human-review fallback signals
+
 Level 4 - Human-in-the-loop operations
 --------------------------------------
 

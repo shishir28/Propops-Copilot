@@ -169,3 +169,12 @@ Content-Type: application/json
 {
   "maintenanceRequestId": "{{createManagerRequest.response.body.id}}"
 }
+
+### Level 3 - baseline inference with guardrails for the created manager request
+POST {{baseUrl}}/api/ai/maintenance-triage/infer
+Authorization: Bearer {{managerLogin.response.body.accessToken}}
+Content-Type: application/json
+
+{
+  "maintenanceRequestId": "{{createManagerRequest.response.body.id}}"
+}

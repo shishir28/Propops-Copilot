@@ -52,3 +52,45 @@ class MaintenanceTriagePreparationResponse(BaseModel):
     output_contract_template: MaintenanceTriageOutputContract
     output_contract_schema: dict[str, Any]
     knowledge_items: list[RetrievedKnowledgeItem]
+
+
+class MaintenanceTriageModelCandidate(BaseModel):
+    category: CategoryValue
+    priority: PriorityValue
+    vendor_type: str
+    dispatch_decision: str
+    internal_summary: str
+    tenant_response_draft: str
+    confidence_score: float = Field(..., ge=0.0, le=1.0)
+
+
+class MaintenanceTriageGuardrailIssue(BaseModel):
+    code: str
+    severity: Literal["Warning", "Blocking"]
+    message: str
+
+
+class MaintenanceTriageGuardrailResult(BaseModel):
+    schema_valid: bool
+    policy_passed: bool
+    emergency_keyword_check_passed: bool
+    confidence_score: float = Field(..., ge=0.0, le=1.0)
+    confidence_threshold: float = Field(..., ge=0.0, le=1.0)
+    requires_human_review: bool
+    fallback_applied: bool
+    issues: list[MaintenanceTriageGuardrailIssue]
+
+
+class MaintenanceTriageInferenceMetadata(BaseModel):
+    provider_mode: str
+    model_name: str
+
+
+class MaintenanceTriageInferenceResponse(BaseModel):
+    rules_version: str
+    input_contract: MaintenanceTriageInputContract
+    output_contract: MaintenanceTriageOutputContract
+    output_contract_schema: dict[str, Any]
+    knowledge_items: list[RetrievedKnowledgeItem]
+    guardrails: MaintenanceTriageGuardrailResult
+    inference_metadata: MaintenanceTriageInferenceMetadata

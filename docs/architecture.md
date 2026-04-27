@@ -2,7 +2,7 @@
 
 ## Intent
 
-This application establishes the operational foundation for PropOps Copilot with a live split-runtime design: the portal and operational workflows run through the .NET API, while Level 2 rules-and-knowledge preparation runs in a separate Python AI service.
+This application establishes the operational foundation for PropOps Copilot with a live split-runtime design: the portal and operational workflows run through the .NET API, while Levels 2 and 3 run in a separate Python AI service for rules retrieval, LangGraph-orchestrated baseline inference, and guardrails.
 
 ## Domain focus
 
@@ -32,7 +32,7 @@ The .NET API remains the single backend surface for the Angular frontend. Any cu
 The repository now reserves `src/ai/propops-ai-service` for all AI-specific work, including:
 
 - retrieval and business-rule orchestration for AI flows
-- prompt construction and model adapters
+- LangGraph state orchestration, prompt construction, and model adapters
 - guardrails and evaluation pipelines
 - fine-tuned model integration and vLLM-facing logic
 
@@ -43,11 +43,12 @@ The Python service is intentionally isolated behind an internal HTTP boundary:
 3. When AI is needed, the .NET API calls the Python AI service.
 4. The Python service can then call model hosts such as vLLM without exposing them to the frontend.
 
-Level 2 currently uses this split to implement:
+Levels 2 and 3 currently use this split to implement:
 
 - a structured maintenance knowledge base in the Python service
 - retrieval of maintenance SOPs, vendor routing rules, emergency policy, and property notes
 - explicit AI triage input/output contracts exposed back through the .NET API
+- a baseline inference path orchestrated through LangGraph with explicit guardrail validation and human-review fallback
 
 ## Frontend structure
 
@@ -84,9 +85,8 @@ The portal now uses **ASP.NET Core Identity** for multi-role authentication.
 
 The current architecture leaves room for future modules such as:
 
-- policy and SOP retrieval
-- AI triage orchestration
-- guardrails and confidence scoring
+- stronger instruct-model integration behind the same adapter boundary
 - dispatch workflows and vendor integration
+- human-review tooling and feedback capture
 
 Those capabilities can be introduced without replacing the initial intake foundation because the user-facing API and the AI runtime are already separated.
