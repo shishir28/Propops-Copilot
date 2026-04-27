@@ -209,7 +209,20 @@ Level 6 - Model specialization
        `models/propops-qwen2.5-3b-lora/adapter_config.json`
        `models/propops-qwen2.5-3b-lora/adapter_model.safetensors`
      - Model artifacts under `models/` are generated local outputs and should not be committed.
-   - Next resume step: run Step 3D by comparing base Qwen/Qwen2.5-3B-Instruct against the LoRA adapter on `eval.chat.jsonl`.
+   - Step 3D comparison checkpoint:
+     - LoRA eval result file:
+       `data/level6-finetuning/lora-eval-results.json`
+     - Base model result:
+       - schema valid: 5/5
+       - category match: 5/5
+       - priority match: 3/5
+     - LoRA adapter result:
+       - schema valid: 5/5
+       - category match: 5/5
+       - priority match: 3/5
+     - The first 20-step adapter proved the fine-tuning/eval loop but did not improve the tiny holdout metric.
+     - The likely causes are tiny dataset size, only 16 training rows, and a very short 20-step adapter run.
+   - Next resume step: either improve dataset/training settings for another adapter run, or move to Step 3E and learn how to serve the current adapter through vLLM.
 
 
 Level 7 - Quality and safety
