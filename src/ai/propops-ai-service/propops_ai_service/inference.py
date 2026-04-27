@@ -461,13 +461,13 @@ def build_inference_prompt(
         "Retrieved knowledge:\n"
         f"{knowledge}\n\n"
         "Return JSON with exactly these keys:\n"
-        "- category\n"
-        "- priority\n"
-        "- vendor_type\n"
-        "- dispatch_decision\n"
-        "- internal_summary\n"
-        "- tenant_response_draft\n"
-        "- confidence_score\n"
+        "-category: one of Plumbing, Electrical, HVAC, Appliances, Security, General\n"
+        "- priority: one of Low, Normal, High, Emergency\n"
+        "- vendor_type: short contractor/vendor type\n"
+        "- dispatch_decision: operational dispatch instruction\n"
+        "- internal_summary: short staff-facing summary\n"
+        "- tenant_response_draft: tenant-facing response\n"
+        "- confidence_score: decimal number from 0.0 to 1.0, for example 0.85, never 85\n"
     )
 
 
