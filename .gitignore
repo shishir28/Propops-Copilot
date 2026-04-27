@@ -1,4 +1,5 @@
 .DS_Store
+.codex
 .angular/
 src/frontend/node_modules/
 src/frontend/dist/
@@ -7,6 +8,8 @@ src/frontend/test-results/
 src/backend/**/bin/
 src/backend/**/obj/
 src/ai/**/.venv/
+.venv-finetune/
+models/
 **/__pycache__/
 **/*.py[cod]
 **/.pytest_cache/

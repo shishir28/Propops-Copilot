@@ -169,7 +169,47 @@ Level 6 - Model specialization
      - schema valid: 5/5
      - category match: 5/5
      - priority match: 3/5
-   - Next resume step: choose the LoRA/QLoRA training target and run a tiny adapter fine-tuning experiment against `train.chat.jsonl`, then compare tuned behavior on `eval.chat.jsonl`.
+   - Step 3B fine-tuning decision:
+     - target model: `Qwen/Qwen2.5-3B-Instruct`
+     - first training method: Hugging Face + TRL + PEFT QLoRA
+     - train file: `data/level6-finetuning/train.chat.jsonl`
+     - eval file: `data/level6-finetuning/eval.chat.jsonl`
+     - output adapter directory: `models/propops-qwen2.5-3b-lora`
+   - Why Hugging Face/TRL/PEFT first instead of NVIDIA/NeMo-style fine-tuning:
+     - it is the most common beginner-friendly LoRA/QLoRA path and maps directly to many tutorials
+     - it produces a standard PEFT adapter that can be inspected, merged, or served later
+     - it keeps the first experiment small and framework-portable
+     - it matches the learning goal: understand adapter fine-tuning mechanics before adopting a heavier platform workflow
+     - NVIDIA/NeMo-style training may fit DGX Spark well later, but it is more platform-specific and adds extra concepts before the basic loop is proven
+   - Step 3C tiny QLoRA training checklist:
+     - 3C.1 Create an isolated fine-tuning Python environment:
+       `python3 -m venv .venv-finetune`
+       `source .venv-finetune/bin/activate`
+       `python -m pip install --upgrade pip`
+     - 3C.2 Install the training stack:
+       `pip install torch transformers datasets peft trl accelerate bitsandbytes`
+     - 3C.3 Create a small training script that reads:
+       `data/level6-finetuning/train.chat.jsonl`
+       and writes adapters to:
+       `models/propops-qwen2.5-3b-lora`
+     - 3C.4 Run a tiny smoke training job first, using very small settings so the pipeline is proven before longer experiments.
+     - 3C.5 Confirm adapter files were created, especially:
+       `adapter_config.json`
+       `adapter_model.safetensors`
+   - Step 3C completion checkpoint:
+     - `.venv-finetune` was created locally and should not be committed.
+     - Training stack installed successfully: torch, transformers, datasets, peft, trl, accelerate, bitsandbytes.
+     - PyTorch sees the NVIDIA GB10 through CUDA with about 121.69 GB available.
+     - QLoRA 4-bit loading was very slow on this stack, so the first successful adapter run used regular LoRA with `--no-qlora`.
+     - Smoke adapter created at:
+       `models/propops-qwen2.5-3b-lora-smoke`
+     - First real tiny adapter created at:
+       `models/propops-qwen2.5-3b-lora`
+     - Confirmed adapter files:
+       `models/propops-qwen2.5-3b-lora/adapter_config.json`
+       `models/propops-qwen2.5-3b-lora/adapter_model.safetensors`
+     - Model artifacts under `models/` are generated local outputs and should not be committed.
+   - Next resume step: run Step 3D by comparing base Qwen/Qwen2.5-3B-Instruct against the LoRA adapter on `eval.chat.jsonl`.
 
 
 Level 7 - Quality and safety
