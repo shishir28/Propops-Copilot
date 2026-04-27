@@ -55,9 +55,11 @@ Levels 2 and 3 currently use this split to implement:
 The Angular application uses standalone components and is organized around:
 
 - a shared application shell
-- a **Login** page for authenticated internal staff access
+- a **Login** page for seeded multi-role portal access
+- a **Workspace** page that acts as the shared post-login landing area
 - an **Overview** page for operational visibility
 - an **Intake** page for structured request creation
+- role-aware navigation, auth guards, and a persisted light/dark theme switcher
 - a simple API service and typed models for backend communication
 
 ## Portal identity
@@ -65,11 +67,20 @@ The Angular application uses standalone components and is organized around:
 The portal now uses **ASP.NET Core Identity** for multi-role authentication.
 
 - `AppUser` is stored in PostgreSQL alongside the operational data model
-- staff authenticate through `/api/auth/login`
+- all supported portal roles authenticate through `/api/auth/login`
 - the Angular application stores the returned JWT bearer token and attaches it to protected API calls
 - overview endpoints are restricted to staff roles
 - maintenance request creation is allowed for staff, tenants, and property owners
 - vendor accounts authenticate successfully but remain outside staff-only and request-creation APIs for now
+
+## Automated test layout
+
+The codebase now keeps automated coverage close to each runtime:
+
+1. Angular unit tests live beside frontend app code under `src/frontend/src/app/**`.
+2. Playwright end-to-end tests live under `src/frontend/playwright/tests`.
+3. .NET unit tests live under `src/backend/tests/PropOpsCopilot.Application.Tests`.
+4. Python AI service tests live under `src/ai/propops-ai-service/tests`.
 
 ## Container topology
 

@@ -4,8 +4,12 @@ This Angular application provides the first user-facing experience for PropOps C
 
 ## Available views
 
+- **Login:** seeded multi-role portal sign-in
+- **Workspace:** shared landing area with role-aware actions
 - **Overview:** operational KPIs and the recent maintenance queue
 - **New request:** structured maintenance intake form
+
+The shell also includes a persisted light/dark theme switcher.
 
 ## Local development
 
@@ -38,6 +42,21 @@ The production build output is used by the Docker image and served through Nginx
 
 ## Tests
 
+Unit tests:
+
 ```bash
-npm test
+npm test -- --watch=false
+```
+
+Playwright end-to-end tests:
+
+```bash
+npm run test:e2e
+```
+
+Useful Playwright variants:
+
+```bash
+npm run test:e2e:headed
+npm run test:e2e:ui
 ```

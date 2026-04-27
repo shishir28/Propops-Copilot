@@ -25,7 +25,8 @@ PropOps Copilot is a UI-first property maintenance operations platform. The curr
 │   │   ├── PropOpsCopilot.Api/
 │   │   ├── PropOpsCopilot.Application/
 │   │   ├── PropOpsCopilot.Domain/
-│   │   └── PropOpsCopilot.Infrastructure/
+│   │   ├── PropOpsCopilot.Infrastructure/
+│   │   └── tests/
 │   └── frontend/
 └── README.md
 ```
@@ -140,6 +141,28 @@ Optional environment overrides:
 - `PLAYWRIGHT_FRONTEND_URL` defaults to `http://127.0.0.1:4315`
 - `PLAYWRIGHT_API_URL` defaults to `http://127.0.0.1:8095`
 
+## Unit tests
+
+The repository now includes focused unit coverage across all three runtimes:
+
+- **Angular:** `src/frontend/src/app/**/*.spec.ts`
+- **.NET:** `src/backend/tests/PropOpsCopilot.Application.Tests`
+- **Python AI service:** `src/ai/propops-ai-service/tests`
+
+Run them individually:
+
+```bash
+cd src/frontend && npm test -- --watch=false
+cd src/backend && dotnet test PropOpsCopilot.sln
+cd src/ai/propops-ai-service && python3 -m venv .venv && . .venv/bin/activate && python -m pip install -r requirements-dev.txt && python -m pytest
+```
+
+Run everything from the repository root:
+
+```bash
+(cd src/frontend && npm test -- --watch=false) && (cd src/backend && dotnet test PropOpsCopilot.sln) && (cd src/ai/propops-ai-service && python3 -m venv .venv && . .venv/bin/activate && python -m pip install -r requirements-dev.txt && python -m pytest)
+```
+
 ### Running Playwright through Docker Compose
 
 Playwright is also available as an optional Compose service.
@@ -170,7 +193,8 @@ Inside Compose, the Playwright service targets:
 
 ## Current capabilities
 
-- Secure internal portal login with ASP.NET Core Identity and JWT-based API auth
+- Secure multi-role portal login with ASP.NET Core Identity and JWT-based API auth
+- Route authenticated users into a shared workspace with role-aware navigation and light/dark theme selection
 - Review maintenance intake KPIs on the overview screen
 - Inspect recent maintenance requests
 - Create new maintenance requests through the Angular UI
@@ -198,6 +222,12 @@ Current access boundaries:
 - **Property managers / dispatchers:** dashboard access, request queue access, request creation
 - **Tenants / property owners:** authenticated portal access and request creation
 - **Vendors:** authenticated portal access only, with operational and intake APIs still restricted
+
+## Automated test coverage
+
+- Angular unit tests cover auth, theme persistence, API service calls, HTTP auth interception, and route guards.
+- .NET unit tests cover dashboard metrics, maintenance request creation/mapping, omnichannel intake preprocessing, and AI preparation/inference HTTP orchestration.
+- Python unit tests cover Level 2 contract/retrieval behavior, heuristic inference, guardrail fallback, and inference settings validation.
 
 ## Deferred scope
 
