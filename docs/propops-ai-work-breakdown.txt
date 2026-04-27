@@ -41,12 +41,16 @@ Level 2 - Rules and knowledge
 4. Define AI input/output contracts
    - input schema for triage requests
    - output schema for:
-     - category
-     - priority
+      - category
+      - priority
      - vendor type
-     - dispatch decision
-     - internal summary
-     - tenant response draft
+      - dispatch decision
+      - internal summary
+      - tenant response draft
+
+Level 2 note:
+- rules and knowledge now live in the Python AI service as structured data, not in the model
+- the .NET API exposes triage contract and knowledge-preparation endpoints for staff workflows
 
 Level 3 - First AI path
 -----------------------

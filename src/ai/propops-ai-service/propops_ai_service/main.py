@@ -1,14 +1,7 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, Field
+from fastapi import FastAPI
 
-
-class MaintenanceTriageRequest(BaseModel):
-    request_id: str = Field(..., description="Maintenance request identifier from the .NET API.")
-    normalized_text: str = Field(..., description="Normalized issue text prepared by the .NET API.")
-    property_name: str = Field(..., description="Resolved property name.")
-    unit_number: str | None = Field(default=None, description="Resolved unit number when available.")
-    category_hint: str | None = Field(default=None, description="Optional deterministic hint from the API.")
-    priority_hint: str | None = Field(default=None, description="Optional deterministic hint from the API.")
+from propops_ai_service.models import MaintenanceTriageInputContract
+from propops_ai_service.retrieval import build_contracts_response, prepare_triage_context
 
 
 app = FastAPI(
@@ -23,9 +16,11 @@ def health() -> dict[str, str]:
     return {"status": "healthy", "service": "propops-ai-service", "mode": "stub"}
 
 
-@app.post("/v1/maintenance/triage")
-def triage_maintenance(_: MaintenanceTriageRequest) -> None:
-    raise HTTPException(
-        status_code=501,
-        detail="AI triage is not implemented yet. Future AI capabilities must be delivered from this Python service."
-    )
+@app.get("/v1/maintenance/contracts")
+def maintenance_contracts():
+    return build_contracts_response()
+
+
+@app.post("/v1/maintenance/triage/prepare")
+def prepare_maintenance_triage(request: MaintenanceTriageInputContract):
+    return prepare_triage_context(request)

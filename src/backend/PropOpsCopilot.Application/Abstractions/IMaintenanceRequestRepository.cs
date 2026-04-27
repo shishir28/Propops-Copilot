@@ -6,5 +6,7 @@ public interface IMaintenanceRequestRepository
 {
     Task<IReadOnlyList<MaintenanceRequest>> ListAsync(CancellationToken cancellationToken = default);
 
+    Task<MaintenanceRequest?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+
     Task AddAsync(MaintenanceRequest request, CancellationToken cancellationToken = default);
 }

@@ -2,7 +2,7 @@
 
 ## Intent
 
-This application establishes the operational foundation for PropOps Copilot before any AI or inference modules are introduced, while reserving a separate Python runtime for future AI features.
+This application establishes the operational foundation for PropOps Copilot with a live split-runtime design: the portal and operational workflows run through the .NET API, while Level 2 rules-and-knowledge preparation runs in a separate Python AI service.
 
 ## Domain focus
 
@@ -25,7 +25,7 @@ The .NET solution follows a DDD-oriented structure:
 | `PropOpsCopilot.Infrastructure` | EF Core persistence, repository implementations, and seed data |
 | `PropOpsCopilot.Api` | REST endpoints, dependency wiring, CORS, and Swagger |
 
-The .NET API remains the single backend surface for the Angular frontend. Any future AI task must be delegated from the API to the separate Python AI service rather than implemented inside the .NET portal runtime.
+The .NET API remains the single backend surface for the Angular frontend. Any current or future AI task must be delegated from the API to the separate Python AI service rather than implemented inside the .NET portal runtime.
 
 ## AI runtime boundary
 
@@ -42,6 +42,12 @@ The Python service is intentionally isolated behind an internal HTTP boundary:
 2. The .NET API performs identity, validation, persistence, and workflow orchestration.
 3. When AI is needed, the .NET API calls the Python AI service.
 4. The Python service can then call model hosts such as vLLM without exposing them to the frontend.
+
+Level 2 currently uses this split to implement:
+
+- a structured maintenance knowledge base in the Python service
+- retrieval of maintenance SOPs, vendor routing rules, emergency policy, and property notes
+- explicit AI triage input/output contracts exposed back through the .NET API
 
 ## Frontend structure
 

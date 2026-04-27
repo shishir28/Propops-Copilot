@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using PropOpsCopilot.Api.Configuration;
 using PropOpsCopilot.Application;
+using PropOpsCopilot.Application.Services;
 using PropOpsCopilot.Infrastructure;
 using PropOpsCopilot.Infrastructure.Identity;
 using PropOpsCopilot.Infrastructure.Persistence;
@@ -19,8 +20,7 @@ builder.Services
     .AddApplication()
     .AddInfrastructure(builder.Configuration);
 builder.Services.Configure<AiServiceOptions>(builder.Configuration.GetSection(AiServiceOptions.SectionName));
-builder.Services.AddHttpClient(
-    "propops-ai",
+builder.Services.AddHttpClient<MaintenanceTriagePreparationService>(
     client =>
     {
         client.BaseAddress = new Uri(aiServiceOptions.BaseUrl);

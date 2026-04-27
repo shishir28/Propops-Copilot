@@ -45,6 +45,7 @@ Content-Type: application/json
 }
 
 ### Create a portal maintenance request as manager
+# @name createManagerRequest
 POST {{baseUrl}}/api/maintenanceRequests
 Authorization: Bearer {{managerLogin.response.body.accessToken}}
 Content-Type: application/json
@@ -154,4 +155,17 @@ Content-Type: application/json
   "unitHint": "",
   "sourceReference": "EMAIL-FAIL-{{timestamp}}",
   "receivedAtUtc": "2026-04-25T11:30:00Z"
+}
+
+### Level 2 - triage contracts
+GET {{baseUrl}}/api/ai/maintenance-triage/contracts
+Authorization: Bearer {{managerLogin.response.body.accessToken}}
+
+### Level 2 - prepare rules and knowledge for the created manager request
+POST {{baseUrl}}/api/ai/maintenance-triage/prepare
+Authorization: Bearer {{managerLogin.response.body.accessToken}}
+Content-Type: application/json
+
+{
+  "maintenanceRequestId": "{{createManagerRequest.response.body.id}}"
 }

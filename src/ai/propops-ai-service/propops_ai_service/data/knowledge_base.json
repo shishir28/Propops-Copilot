@@ -1,0 +1,140 @@
+{
+  "version": "2026.04-level2",
+  "maintenance_sops": {
+    "Plumbing": {
+      "title": "Plumbing triage SOP",
+      "content": [
+        "Confirm whether water is actively flowing, spreading, or damaging finishes.",
+        "If the resident can safely access the local shut-off valve, ask them to isolate the fixture.",
+        "Escalate immediately when water ingress affects electrics or multiple apartments."
+      ]
+    },
+    "Electrical": {
+      "title": "Electrical triage SOP",
+      "content": [
+        "Check for sparking, burning smell, exposed wiring, or complete power loss.",
+        "Do not ask residents to reset breakers if there is any sign of heat or burning.",
+        "Treat life-safety and whole-unit outages as immediate dispatch scenarios."
+      ]
+    },
+    "HVAC": {
+      "title": "HVAC triage SOP",
+      "content": [
+        "Confirm whether cooling or heating is fully unavailable and how many rooms are impacted.",
+        "Prioritize vulnerable residents and extreme weather conditions.",
+        "Capture any leaking condensate or tripped safety faults for the vendor handoff."
+      ]
+    },
+    "Appliances": {
+      "title": "Appliance triage SOP",
+      "content": [
+        "Confirm the appliance type, failure state, and whether water is trapped or leaking.",
+        "If the issue risks flooding, isolate water and treat as urgent.",
+        "Document the last successful cycle or visible error indication."
+      ]
+    },
+    "Security": {
+      "title": "Security triage SOP",
+      "content": [
+        "Confirm whether the property can currently be secured.",
+        "Any failed lock or door access issue affecting security should be treated as urgent or emergency.",
+        "Capture access instructions and whether the resident can remain safely inside."
+      ]
+    },
+    "General": {
+      "title": "General maintenance triage SOP",
+      "content": [
+        "Capture the resident impact, safety concerns, and any temporary workaround already attempted.",
+        "Collect photos or supporting detail when available.",
+        "Route to the most likely trade based on resident impact and affected asset."
+      ]
+    }
+  },
+  "vendor_rules": {
+    "Plumbing": [
+      {
+        "title": "Licensed plumber routing",
+        "conditions": [
+          "Use a licensed plumber for leak, blockage, burst pipe, or fixture isolation issues.",
+          "After-hours active leaks should go to the on-call plumbing partner."
+        ]
+      }
+    ],
+    "Electrical": [
+      {
+        "title": "Licensed electrician routing",
+        "conditions": [
+          "Use a licensed electrician for power, outlet, breaker, switch, or lighting safety faults.",
+          "Whole-unit outage or burning smell requires immediate escalation."
+        ]
+      }
+    ],
+    "HVAC": [
+      {
+        "title": "HVAC vendor routing",
+        "conditions": [
+          "Use the preferred HVAC contractor for cooling, heating, or ventilation failures.",
+          "After-hours dispatch is reserved for vulnerable residents or critical business impact."
+        ]
+      }
+    ],
+    "Appliances": [
+      {
+        "title": "Appliance technician routing",
+        "conditions": [
+          "Use appliance care vendors for dishwasher, oven, fridge, washer, and dryer failures.",
+          "If water cannot be contained, involve plumbing support as well."
+        ]
+      }
+    ],
+    "Security": [
+      {
+        "title": "Security and locksmith routing",
+        "conditions": [
+          "Use the locksmith or security contractor when the property cannot be secured.",
+          "After-hours lock failures should go straight to the emergency security roster."
+        ]
+      }
+    ],
+    "General": [
+      {
+        "title": "General maintenance routing",
+        "conditions": [
+          "Use the general maintenance team when the issue does not clearly map to a specialist trade.",
+          "Escalate to a specialist vendor once photos or additional detail narrow the diagnosis."
+        ]
+      }
+    ]
+  },
+  "emergency_policy": {
+    "title": "Emergency maintenance policy",
+    "content": [
+      "Treat incidents as emergency when there is immediate safety risk, uncontrolled water ingress, complete power loss, fire, gas smell, or the property cannot be secured.",
+      "Emergency items should trigger immediate on-call dispatch and a resident acknowledgement without waiting for business hours.",
+      "Record the triggering condition so human reviewers can confirm why the item bypassed the normal queue."
+    ]
+  },
+  "property_notes": {
+    "Harbour View Residences": {
+      "title": "Harbour View Residences notes",
+      "content": [
+        "After-hours access is through the concierge desk and requires the work order reference.",
+        "Wet-area shut-off valves are located in the service riser cupboard outside each apartment."
+      ]
+    },
+    "Elm Street Townhomes": {
+      "title": "Elm Street Townhomes notes",
+      "content": [
+        "Security issues should note whether the resident is in a front or rear-entry townhouse.",
+        "Preferred locksmith response is via the emergency security roster after business hours."
+      ]
+    },
+    "Cityscape Lofts": {
+      "title": "Cityscape Lofts notes",
+      "content": [
+        "Appliance vendors must book loading dock access for large replacements.",
+        "Residents should be asked whether the intercom is needed for technician entry."
+      ]
+    }
+  }
+}

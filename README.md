@@ -1,6 +1,6 @@
 # PropOps Copilot
 
-PropOps Copilot is the first UI-first foundation for a property maintenance operations platform. This version focuses on structured intake, queue visibility, and a DDD-oriented application backbone using Angular, ASP.NET Core, PostgreSQL, and a separate Python AI service boundary for future AI capabilities.
+PropOps Copilot is a UI-first property maintenance operations platform. The current implementation covers structured intake, queue visibility, deterministic normalization, and Level 2 rules-and-knowledge preparation using Angular, ASP.NET Core, PostgreSQL, and a separate Python AI service.
 
 ## Stack
 
@@ -16,7 +16,8 @@ PropOps Copilot is the first UI-first foundation for a property maintenance oper
 .
 ├── docker-compose.yml
 ├── docs/
-│   └── architecture.md
+│   ├── architecture.md
+│   └── propops-copilot-flow.txt
 ├── src/
 │   ├── ai/
 │   │   └── propops-ai-service/
@@ -26,7 +27,7 @@ PropOps Copilot is the first UI-first foundation for a property maintenance oper
 │   │   ├── PropOpsCopilot.Domain/
 │   │   └── PropOpsCopilot.Infrastructure/
 │   └── frontend/
-└── propops-copilot-flow.txt
+└── README.md
 ```
 
 ## Running with Docker Compose
@@ -81,12 +82,18 @@ uvicorn propops_ai_service.main:app --reload --host 0.0.0.0 --port 8000
 
 The .NET API is configured to call the Python service through `AiService:BaseUrl`, which defaults to `http://localhost:8000` outside Docker and `http://ai-service:8000` inside Docker Compose.
 
+Level 2 is now implemented across that boundary:
+
+- the Python service owns the structured maintenance knowledge base and triage contract schemas
+- the .NET API exposes staff-facing endpoints that prepare rules and knowledge for an existing maintenance request
+
 ## Playwright tests
 
 The frontend workspace now includes Playwright coverage for:
 
 - manager request creation through the Angular portal
 - Level 1 intake and normalization through the API connector endpoints
+- Level 2 rules and knowledge retrieval through the .NET API
 
 Start the full stack first:
 
@@ -129,16 +136,23 @@ Build and run it manually:
 docker compose --profile test run --rm playwright
 ```
 
-Headed mode:
+The Compose runner is for headless execution:
 
 ```bash
-docker compose --profile test run --rm playwright npm run test:e2e:headed
+docker compose --profile test run --rm playwright
+```
+
+Use headed mode only on the host machine:
+
+```bash
+cd src/frontend
+npm run test:e2e:headed
 ```
 
 Inside Compose, the Playwright service targets:
 
-- frontend: `http://frontend:4200`
-- api: `http://api:8080`
+- frontend: `http://host.docker.internal:4315`
+- api: `http://host.docker.internal:8095`
 
 ## Current capabilities
 
@@ -148,7 +162,9 @@ Inside Compose, the Playwright service targets:
 - Create new maintenance requests through the Angular UI
 - Persist requests to PostgreSQL
 - Seed a starter queue for local development
-- Keep the user-facing runtime clean so future AI work happens in the dedicated Python service instead of the portal API
+- Keep the user-facing runtime clean so current and future AI work happens in the dedicated Python service instead of the portal API
+- Retrieve maintenance SOPs, vendor rules, emergency policy, and property notes through the Python AI service
+- Return explicit Level 2 AI input/output contracts for maintenance triage preparation
 
 ## Portal authentication
 
@@ -170,4 +186,4 @@ Current access boundaries:
 
 ## Deferred scope
 
-This version intentionally excludes implemented inference, LLM orchestration, and AI-assisted triage. The runtime boundary is already defined, though: Angular talks only to the .NET API, and the .NET API is the only application allowed to call the Python AI service for future AI features.
+This version intentionally excludes baseline inference, LLM orchestration, fine-tuning, and vLLM-backed serving. The runtime boundary is already active, though: Angular talks only to the .NET API, and the .NET API is the only application allowed to call the Python AI service for current and future AI features.

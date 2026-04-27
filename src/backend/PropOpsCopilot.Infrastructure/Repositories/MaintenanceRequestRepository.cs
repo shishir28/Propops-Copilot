@@ -13,6 +13,11 @@ public sealed class MaintenanceRequestRepository(PropOpsDbContext dbContext) : I
             .OrderByDescending(request => request.SubmittedAtUtc)
             .ToListAsync(cancellationToken);
 
+    public Task<MaintenanceRequest?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) =>
+        dbContext.MaintenanceRequests
+            .AsNoTracking()
+            .FirstOrDefaultAsync(request => request.Id == id, cancellationToken);
+
     public async Task AddAsync(MaintenanceRequest request, CancellationToken cancellationToken = default)
     {
         await dbContext.MaintenanceRequests.AddAsync(request, cancellationToken);
