@@ -222,7 +222,24 @@ Level 6 - Model specialization
        - priority match: 3/5
      - The first 20-step adapter proved the fine-tuning/eval loop but did not improve the tiny holdout metric.
      - The likely causes are tiny dataset size, only 16 training rows, and a very short 20-step adapter run.
-   - Next resume step: either improve dataset/training settings for another adapter run, or move to Step 3E and learn how to serve the current adapter through vLLM.
+   - Step 3E vLLM LoRA serving checkpoint:
+     - vLLM was started with LoRA enabled and the local adapter mounted:
+       `propops-qwen2.5-3b-lora=/adapters/propops-qwen2.5-3b-lora`
+     - `/v1/models` exposes both:
+       - `Qwen/Qwen2.5-3B-Instruct`
+       - `propops-qwen2.5-3b-lora`
+     - Docker Compose now points the Python AI service at:
+       `PROP_OPS_AI_MODEL_NAME=propops-qwen2.5-3b-lora`
+       `PROP_OPS_AI_OPENAI_BASE_URL=http://host.docker.internal:8001/v1`
+     - `host.docker.internal` is enabled for the AI service through Docker `host-gateway`.
+     - Full app-level path was verified:
+       Angular -> .NET API -> Python AI service -> vLLM -> LoRA adapter.
+     - A sample .NET inference returned:
+       - provider mode: `openai-compatible`
+       - model name: `propops-qwen2.5-3b-lora`
+       - schema valid: true
+       - policy passed: true
+   - Level 6 is complete as a learning milestone. Next improvement path is data/model quality: add more examples, rebalance priority cases, retrain a stronger adapter, and expand eval coverage.
 
 
 Level 7 - Quality and safety

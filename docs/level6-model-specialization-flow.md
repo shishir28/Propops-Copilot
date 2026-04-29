@@ -91,6 +91,18 @@ Step 12 serving base model with vLLM: done
 3B target/method choice: done
 3C LoRA adapter training: done
 3D base vs LoRA comparison: done
-3E serving LoRA through vLLM: next major learning step
+3E serving LoRA through vLLM: done
 ```
 
+Current app-facing model:
+
+```text
+PROP_OPS_AI_MODEL_NAME=propops-qwen2.5-3b-lora
+PROP_OPS_AI_OPENAI_BASE_URL=http://host.docker.internal:8001/v1
+```
+
+The verified runtime path is:
+
+```text
+Angular -> .NET API -> Python AI service -> vLLM -> propops-qwen2.5-3b-lora
+```
